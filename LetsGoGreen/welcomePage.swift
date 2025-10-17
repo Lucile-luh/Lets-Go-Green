@@ -8,25 +8,32 @@
 import SwiftUI
 
 struct welcomePage: View {
+    
     @State private var animateAppIcon = false
     var body: some View {
         
-        VStack {
-            ZStack {
-                RoundedRectangle(cornerRadius: 30)
-                    .scaledToFit()
-                    .frame(width: 180, height: 180)
-                    .foregroundStyle(Color(.systemGray6))
-                    .opacity(animateAppIcon ? 1 : 0)
-                
-                Image(systemName: "tree")
-                    .fontWeight(.heavy)
-                    .font(.system(size: 100))
-                    .foregroundStyle(.middlecolor)
-                
-            }
-                
+        NavigationStack {
             
+                
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color(red: 0.95, green: 1.0, blue: 0.95), // Light mint green
+                        Color(red: 0.3, green: 0.85, blue: 0.3)   // Leafy green
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                
+                VStack(spacing: 20) {
+                    Image("appIconLTG")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 250, height: 250)
+                    
+                    
                     
                     Text("Welcome to ")
                         .fontDesign(.rounded)
@@ -35,21 +42,42 @@ struct welcomePage: View {
                         .foregroundColor(.topColour)
                     
                     
-                        .padding()
+//                    Spacer()
                     
                     Text("a green planner for organizing community clean-up and tree-planting events..")
-                        .fontDesign(.rounded)
+                        .fontDesign(.serif)
                         .fontWeight(.bold)
-                        .padding(10)
+                    //                    .padding(10)
                         .font(.title2)
+                        .multilineTextAlignment(.center)
                         .foregroundStyle(.topColour)
+                    
+//                    Spacer()
+                    
+                    NavigationLink(destination: logInPage()){
+                        Text("Continue")
+                            .fontWeight(.semibold)
+                            .foregroundColor(.topColour)
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 30)
+                            .background(Color.green.opacity(0.2))
+                            .cornerRadius(10)
+                        
+                        
+                    }
+                    
                 }
-                .onAppear{
-                    animateAppIcon = true
-                }
+            }
+                
+            }
+            .onAppear{
+                animateAppIcon = true
+            }
             
         }
-    
+//        .padding()
+        
+        
 }
 
 #Preview {

@@ -8,8 +8,20 @@
 import SwiftUI
 
 struct logInPage: View {
+    @State private var username: String = ""
+    @State private var Password: String = ""
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        
+        VStack {
+            
+            Image( "appIconLTG")
+                .resizable()
+                .frame(width: 200, height: 200)
+                .aspectRatio(1,contentMode: .fit)
+            
+        }
+        .padding(20)
     }
 }
 
