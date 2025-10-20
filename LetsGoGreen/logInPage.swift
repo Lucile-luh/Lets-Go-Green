@@ -29,24 +29,37 @@ struct logInPage: View {
                 VStack {
                     Image( "appIconLTG")
                         .resizable()
-                        .frame(width: 200, height: 200)
+                        .frame(width: 300, height: 300)
                         .aspectRatio(1,contentMode: .fit)
-                    
+
 
                     TextField("Username", text: $username)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-//                        .background(.middlecolor.opacity(0.3))
                         .foregroundStyle(.topColour)
-                        
                         .cornerRadius(0.6)
                         .padding()
                        
                     
                     SecureField("Password", text: $Password)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-//                        .background(.middlecolor.opacity(0.3))
                         .foregroundStyle(.topColour)
                         .padding()
+                    
+                    Text("Don't have an account?")
+                    .foregroundColor(.black)
+                    .fontWeight(.heavy)
+                    .fontDesign(.serif)
+                
+                    NavigationLink(destination: signUpPage()){
+                        Text("Sign up")
+                            .fontWeight(.semibold)
+                            .foregroundColor(.topColour)
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 30)
+                            .background(Color.green.opacity(0.2))
+                            .cornerRadius(10)
+                    }
+                    
                 }
                 
             }
