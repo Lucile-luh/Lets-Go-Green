@@ -6,16 +6,14 @@
 //
 
 import SwiftUI
-import Firebase
+
 
 struct signUpPage: View {
     @State private var username: String = ""
     @State private var Password: String = ""
     @State private var email: String = ""
     
-    init(){
-        FirebaseApp.configure()
-    }
+    
     var body: some View {
         NavigationStack{
             ZStack {
@@ -66,9 +64,7 @@ struct signUpPage: View {
                         
                     }
                 }
-//                private func handleSignUp() {
-//                    
-//                }
+
             }
         }
     }
