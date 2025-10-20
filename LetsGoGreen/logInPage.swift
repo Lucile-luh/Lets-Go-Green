@@ -38,6 +38,8 @@ struct logInPage: View {
                         .foregroundStyle(.topColour)
                         .cornerRadius(0.6)
                         .padding()
+                        .keyboardType(.emailAddress)
+                        .padding()
                        
                     
                     SecureField("Password", text: $Password)
@@ -45,19 +47,37 @@ struct logInPage: View {
                         .foregroundStyle(.topColour)
                         .padding()
                     
+                    NavigationLink(destination: joinAndCreatePage()){
+                    Text("Log In")
+                            .fontWeight(.bold)
+                            .fontDesign(.serif)
+                            .foregroundColor(.darker)
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 35)
+                            .background(Color.green)
+                            .opacity(0.4)
+                            .cornerRadius(10)
+                    }
+                    
+                   .padding()
+                    
+                   
                     Text("Don't have an account?")
                     .foregroundColor(.black)
                     .fontWeight(.heavy)
                     .fontDesign(.serif)
+                    
+                  
                 
                     NavigationLink(destination: signUpPage()){
                         Text("Sign up")
                             .fontWeight(.semibold)
-                            .foregroundColor(.topColour)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 30)
-                            .background(Color.green.opacity(0.2))
-                            .cornerRadius(10)
+                            .fontDesign(.serif)
+                            .foregroundColor(.green)
+//                            .padding(.vertical, 12)
+//                            .padding(.horizontal, 30)
+//                            .background(Color.green.opacity(0.2))
+//                            .cornerRadius(10)
                     }
                     
                 }

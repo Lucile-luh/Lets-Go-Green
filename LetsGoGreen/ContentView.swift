@@ -7,21 +7,19 @@
 
 import SwiftUI
 
-//let gradientColors: [Color] = [
-//    .middlecolor,
-//    .universal,
-//    .topColour
-//]
+
 
 struct ContentView: View {
     
     var body: some View {
-        
-        TabView {
+    
+//        TabView {
+            
             welcomePage()
-            logInPage()
+//            logInPage()
+//           signUpPage()
                 
-              }
+//        }
         
     }
       
