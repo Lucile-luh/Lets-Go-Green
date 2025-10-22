@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct joinAndCreatePage: View {
+struct HomePage: View {
     var body: some View {
         NavigationStack{
             
@@ -37,5 +37,5 @@ struct joinAndCreatePage: View {
 }
 
 #Preview {
-    joinAndCreatePage()
+    HomePage()
 }

@@ -56,7 +56,7 @@ struct signUpPage: View {
                         .foregroundStyle(.topColour)
                         .padding()
                     
-                    NavigationLink(destination: joinAndCreatePage()){
+                    NavigationLink(destination: HomePage()){
                         Text("Sign up")
                             .fontWeight(.semibold)
                             .fontDesign(.serif)

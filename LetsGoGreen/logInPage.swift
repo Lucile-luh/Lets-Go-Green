@@ -52,7 +52,7 @@ struct logInPage: View {
                         .foregroundStyle(.topColour)
                         .padding()
                     
-                    NavigationLink(destination: joinAndCreatePage()){
+                    NavigationLink(destination: HomePage()){
                     Text("Log In")
                             .fontWeight(.bold)
                             .fontDesign(.serif)
