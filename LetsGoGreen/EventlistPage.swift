@@ -12,18 +12,22 @@ import SwiftUI
 
         var body: some View {
             
-            ZStack {
-                
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(red: 0.95, green: 1.0, blue: 0.95),
-                        Color(red: 0.3, green: 0.85, blue: 0.3)
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
-                
+                ZStack {
+                    
+                    Image("treePlanting").resizable().ignoresSafeArea()
+                        .opacity(0.8)
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color(red: 0.95, green: 1.0, blue: 0.95), // Light mint green
+                            Color(red: 0.3, green: 0.85, blue: 0.3)   // Leafy green
+                        ]),
+                        
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                            
+                    )
+                    .ignoresSafeArea()
+                    .opacity(0.2)
                 VStack {
                     
                     Text("Event List")
@@ -62,21 +66,12 @@ import SwiftUI
                     }
                     .scrollContentBackground(.hidden)
                     .onAppear {
-                        loadEvents()
+
                     }
                 }
             }
         }
 
-        private func loadEvents() {
-         
-            if let savedEvents = UserDefaults.standard.data(forKey: "events") {
-                let decoder = JSONDecoder()
-                if let loadedEvents = try? decoder.decode([Event].self, from: savedEvents) {
-                    events = loadedEvents
-                }
-            }
-        }
     }
 
         extension DateFormatter {
@@ -97,5 +92,31 @@ import SwiftUI
 
 
 #Preview {
-    EventListPage()
+    EventListPage(event: Event(title: "1st of every month clean up", date: Date(), location: "Around mkhosana", time: Date(), description: "A monthly community clean up event."))
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//                        loadEvents()
+
+//        private func loadEvents() {
+//
+//            if let savedEvents = UserDefaults.standard.data(forKey: "events") {
+//                let decoder = JSONDecoder()
+//                if let loadedEvents = try? decoder.decode([Event].self, from: savedEvents) {
+//                    events = loadedEvents
+//                }
+//            }
+//        }
