@@ -16,15 +16,20 @@ struct logInPage: View {
         NavigationStack {
             
             ZStack {
+                Image("treePlanting").resizable().ignoresSafeArea()
+                    .opacity(0.8)
                 LinearGradient(
                     gradient: Gradient(colors: [
                         Color(red: 0.95, green: 1.0, blue: 0.95), // Light mint green
                         Color(red: 0.3, green: 0.85, blue: 0.3)   // Leafy green
                     ]),
+                    
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
+                        
                 )
                 .ignoresSafeArea()
+                .opacity(0.1)
                 
                 VStack {
                     Image( "appIconLTG")
@@ -51,11 +56,11 @@ struct logInPage: View {
                     Text("Log In")
                             .fontWeight(.bold)
                             .fontDesign(.serif)
-                            .foregroundColor(.darker)
+                            .foregroundColor(.black)
                             .padding(.vertical, 12)
                             .padding(.horizontal, 35)
                             .background(Color.green)
-                            .opacity(0.4)
+                            .opacity(0.7)
                             .cornerRadius(10)
                     }
                     
