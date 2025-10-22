@@ -8,6 +8,15 @@
 import SwiftUI
 import Foundation
 
+struct Event: Codable, Identifiable {
+    var id = UUID()
+    var title: String
+    var date: Date
+    var location: String
+    var time: Date
+    var description: String
+}
+
 struct createEventPage: View {
     @State private var eventTitle: String = ""
     @State private var eventDescription: String = ""
