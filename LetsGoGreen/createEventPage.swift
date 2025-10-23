@@ -66,27 +66,32 @@ struct createEventPage: View {
                 
                 DatePicker("Event time", selection: $eventTime, displayedComponents: .hourAndMinute)
                     .padding()
+                
                 if !eventTitle.isEmpty && !eventLocation.isEmpty && !eventDescription.isEmpty{
                     
                     NavigationLink(destination: EventListPage(event: Event(title: eventTitle, date: eventDate, location: eventLocation, time: eventTime, description: eventDescription))) {
-        
+                        
                         Text("Add Event")
                             .padding()
-                        
-                            .onAppear(){
-                                resetFields()
-                            }
-                        
-                    .foregroundStyle(.black)
-                }
-               
+                    }
+                    .onAppear(){
+                        resetFields()
+                    }
+                            .foregroundStyle(.black)
                     
-
+                }
+                   
             }
-            
         }
     }
-
+    
+    private func resetFields() {
+        eventTitle = ""
+        eventDescription = ""
+        eventLocation = ""
+        eventTime = Date()
+        eventDate = Date()
+    }
 }
 
 #Preview {
