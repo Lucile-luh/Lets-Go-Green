@@ -9,9 +9,9 @@ import SwiftUI
     struct EventListPage: View {
         @State private var events: [Event] = []
     var event: Event
-
         var body: some View {
             
+            NavigationStack {
                 ZStack {
                     
                     Image("treePlanting").resizable().ignoresSafeArea()
@@ -24,56 +24,61 @@ import SwiftUI
                         
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
-                            
+                        
                     )
                     .ignoresSafeArea()
                     .opacity(0.2)
-                VStack {
-                    
-                    Text("Event List")
-                        .font(.largeTitle)
-                        .padding()
-                    
-                    
-                    List {
-                        if events.isEmpty {
-                            VStack(alignment: .leading) {
-                                Text(event.title)
-                                    .font(.headline)
-                                Text(event.description)
-                                    .font(.subheadline)
-                                Text("Location: \(event.location)")
-                                    .font(.subheadline)
-                                Text("Date: \(event.date, formatter: DateFormatter.shortDate) Time: \(event.time, formatter: DateFormatter.shortTime)")
-                                    .font(.footnote)
-                            }
+                    VStack {
+                        
+                        Text("Event List")
+                            .font(.largeTitle)
                             .padding()
-                        } else {
-                            ForEach(events, id: \.description) { event in
-                                VStack(alignment: .leading) {
-                                    Text(event.title)
-                                        .font(.headline)
-                                    Text(event.description)
-                                        .font(.subheadline)
-                                    Text("Location: \(event.location)")
-                                        .font(.subheadline)
-                                    Text("Date: \(event.date, formatter: DateFormatter.shortDate) Time: \(event.time, formatter: DateFormatter.shortTime)")
-                                        .font(.footnote)
-                                }
-                                .padding()
+                        
+                        
+                        List {
+//                            if events.isEmpty {
+//                                VStack(alignment: .leading) {
+//                                    Text(event.title)
+//                                        .font(.headline)
+//                                    Text(event.description)
+//                                        .font(.subheadline)
+//                                    Text("Location: \(event.location)")
+//                                        .font(.subheadline)
+//                                    Text("Date: \(event.date, formatter: DateFormatter.shortDate) Time: \(event.time, formatter: DateFormatter.shortTime)")
+//                                        .font(.footnote)
+//                                }
+//                                .padding()
+//                            } else {
+                                ForEach(events, id: \.description) { event in
+                                    VStack(alignment: .leading) {
+                                        Text(event.title)
+                                            .font(.headline)
+                                        Text(event.description)
+                                            .font(.subheadline)
+                                        Text("Location: \(event.location)")
+                                            .font(.subheadline)
+                                        Text("Date: \(event.date, formatter: DateFormatter.shortDate) Time: \(event.time, formatter: DateFormatter.shortTime)")
+                                            .font(.footnote)
+                                            
+                                    }
+                                    .padding()
+//                                }
                             }
+                            NavigationLink(destination: createEventPage()) {
+                                Image(systemName: "rectangle.stack.fill.badge.plus")
+                                    .imageScale(.large)
+                                    .padding(.vertical, 8)
+                            }
+                            .foregroundStyle(.darker)
+                            
+                            
                         }
-                        Button(action: {}){
-                            Image(systemName: "rectangle.stack.fill.badge.plus")
-                                .foregroundStyle(.darker)
-                                .font(.largeTitle)
+                        .scrollContentBackground(.hidden)
+                        .onAppear {
+                            
                         }
+                        
                     }
-                    .scrollContentBackground(.hidden)
-                    .onAppear {
-
-                    }
-                   
                 }
             }
         }
@@ -126,3 +131,4 @@ import SwiftUI
 //                }
 //            }
 //        }
+

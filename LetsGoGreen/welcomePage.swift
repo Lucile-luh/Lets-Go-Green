@@ -13,18 +13,22 @@ struct welcomePage: View {
     var body: some View {
         
         NavigationStack {
-            
-                
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(red: 0.95, green: 1.0, blue: 0.95), // Light mint green
-                        Color(red: 0.3, green: 0.85, blue: 0.3)   // Leafy green
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+        
+                ZStack {
+                    Image("treePlanting").resizable().ignoresSafeArea()
+                        .opacity(0.8)
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color(red: 0.95, green: 1.0, blue: 0.95), // Light mint green
+                            Color(red: 0.3, green: 0.85, blue: 0.3)   // Leafy green
+                        ]),
+                        
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                            
+                    )
+                    .ignoresSafeArea()
+                    .opacity(0.1)
                 
                 
                 VStack(spacing: 20) {
@@ -57,7 +61,7 @@ struct welcomePage: View {
                     NavigationLink(destination: logInPage()){
                         Text("Continue")
                             .fontWeight(.semibold)
-                            .foregroundColor(.topColour)
+                            .foregroundColor(.darker)
                             .padding(.vertical, 12)
                             .padding(.horizontal, 30)
                             .background(Color.green.opacity(0.2))
