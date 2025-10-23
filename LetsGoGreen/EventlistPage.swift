@@ -63,11 +63,17 @@ import SwiftUI
                                 .padding()
                             }
                         }
+                        Button(action: {}){
+                            Image(systemName: "rectangle.stack.fill.badge.plus")
+                                .foregroundStyle(.darker)
+                                .font(.largeTitle)
+                        }
                     }
                     .scrollContentBackground(.hidden)
                     .onAppear {
 
                     }
+                   
                 }
             }
         }
