@@ -17,6 +17,7 @@ struct Event: Codable {
 }
 
 struct createEventPage: View {
+    @State private var events: [Event] = []
     @State private var eventTitle: String = ""
     @State private var eventDescription: String = ""
     @State private var eventLocation: String = ""
@@ -69,15 +70,13 @@ struct createEventPage: View {
                 
                 if !eventTitle.isEmpty && !eventLocation.isEmpty && !eventDescription.isEmpty{
                     
-                    NavigationLink(destination: EventListPage(event: Event(title: eventTitle, date: eventDate, location: eventLocation, time: eventTime, description: eventDescription))) {
-                        
-                        Text("Add Event")
-                            .padding()
-                    }
-                    .onAppear(){
+                    Button("Add event", systemImage: "circle.plus.fill"){
+                        let newEvent = Event(title: eventTitle, date: eventDate, location: eventLocation, time: eventTime, description: eventDescription)
+                        events.append(newEvent)
+                       
                         resetFields()
                     }
-                            .foregroundStyle(.black)
+                    .foregroundStyle(.black)
                     
                 }
                    
