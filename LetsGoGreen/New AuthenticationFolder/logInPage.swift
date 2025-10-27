@@ -52,39 +52,41 @@ struct logInPage: View {
                         .foregroundStyle(.topColour)
                         .padding()
                     
-                    NavigationLink(destination: HomePage()){
-                    Text("Log In")
-                            .fontWeight(.bold)
-                            .fontDesign(.serif)
+                    if !username.isEmpty && !Password.isEmpty {
+                        NavigationLink(destination: HomePage()){
+                            Text("Log In")
+                                .fontWeight(.bold)
+                                .fontDesign(.serif)
+                                .foregroundColor(.black)
+                                .padding(.vertical, 12)
+                                .padding(.horizontal, 35)
+                                .background(Color.green)
+                                .opacity(0.7)
+                                .cornerRadius(10)
+                        }
+                        
+                        .padding()
+                        
+                        
+                        
+                        Text("Don't have an account?")
                             .foregroundColor(.black)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 35)
-                            .background(Color.green)
-                            .opacity(0.7)
-                            .cornerRadius(10)
-                    }
-                    
-                   .padding()
-                    
-                   
-                    Text("Don't have an account?")
-                    .foregroundColor(.black)
-                    .fontWeight(.heavy)
-                    .fontDesign(.serif)
-                    
-                  
-                
-                    NavigationLink(destination: signUpPage()){
-                        Text("Sign up")
-                            .fontWeight(.semibold)
+                            .fontWeight(.heavy)
                             .fontDesign(.serif)
-                            .foregroundColor(.green)
-//                            .padding(.vertical, 12)
-//                            .padding(.horizontal, 30)
-//                            .background(Color.green.opacity(0.2))
-//                            .cornerRadius(10)
+                        
+                        
+                        
+                        NavigationLink(destination: signUpPage()){
+                            Text("Sign up")
+                                .fontWeight(.semibold)
+                                .fontDesign(.serif)
+                                .foregroundColor(.green)
+                            //                            .padding(.vertical, 12)
+                            //                            .padding(.horizontal, 30)
+                            //                            .background(Color.green.opacity(0.2))
+                            //                            .cornerRadius(10)
+                        }
                     }
-                    
                 }
                 
             }
