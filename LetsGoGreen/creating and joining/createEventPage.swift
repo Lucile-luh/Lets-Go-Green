@@ -7,17 +7,14 @@
 
 import SwiftUI
 import SwiftData
+import Foundation
 
-struct Event: Codable {
-    var title: String
-    var date: Date
-    var location: String
-    var time: Date
-    var description: String
-}
 
 struct createEventPage: View {
-    @State private var events: [Event] = []
+    @Query var event: [Event]
+    @Environment(\.modelContext) private var context
+    
+//    @State private var events: [Event] = []
     @State private var eventTitle: String = ""
     @State private var eventDescription: String = ""
     @State private var eventLocation: String = ""
@@ -77,16 +74,14 @@ struct createEventPage: View {
                                     date: eventDate,
                                     location: eventLocation,
                                     time: eventTime,
-                                    description: eventDescription
+                                                     info: eventDescription
                                 )
                                 
-                                if  !events.isEmpty {
-                                    events.append(newEvent)
-                                }
+                                context.insert(newEvent)
                                 
                                 
-                                loadEvents()
-                                saveEvents()
+//                                loadEvents()
+//                                saveEvents()
                                 navigateToList = true
                                 resetFields()
                             } label: {
@@ -101,30 +96,30 @@ struct createEventPage: View {
                         
                         // Hidden NavigationLink that triggers programmatically
                         NavigationLink(
-                            destination:  EventListPage(event: Event(title: "1st of every month clean up", date: Date(), location: "Around mkhosana", time: Date(), description: "A monthly community clean up event.")),
+                            destination: EventListPage(),
                             isActive: $navigateToList
                         ) {
                         }
                     }
                 
-                .onAppear(perform: loadEvents)
+//                .onAppear(perform: loadEvents)
             }
         }
         
         //
     }
-    private func saveEvents() {
-        if let encoded = try? JSONEncoder().encode(events) {
-            UserDefaults.standard.set(encoded, forKey: "events")
-        }
-    }
-    
-    private func loadEvents() {
-        if let data = UserDefaults.standard.data(forKey: "events"),
-           let decodedEvents = try? JSONDecoder().decode([Event].self, from: data) {
-            events = decodedEvents
-        }
-    }
+//    private func saveEvents() {
+//        if let encoded = try? JSONEncoder().encode(events) {
+//            UserDefaults.standard.set(encoded, forKey: "events")
+//        }
+//    }
+//    
+//    private func loadEvents() {
+//        if let data = UserDefaults.standard.data(forKey: "events"),
+//           let decodedEvents = try? JSONDecoder().decode([Event].self, from: data) {
+//            events = decodedEvents
+//        }
+//    }
     
     private func resetFields() {
         eventTitle = ""
@@ -138,3 +133,4 @@ struct createEventPage: View {
 #Preview {
     createEventPage()
 }
+

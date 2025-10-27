@@ -52,7 +52,7 @@ struct logInPage: View {
                         .foregroundStyle(.topColour)
                         .padding()
                     
-                    if !username.isEmpty && !Password.isEmpty {
+                   
                         NavigationLink(destination: HomePage()){
                             Text("Log In")
                                 .fontWeight(.bold)
@@ -85,7 +85,7 @@ struct logInPage: View {
                             //                            .padding(.horizontal, 30)
                             //                            .background(Color.green.opacity(0.2))
                             //                            .cornerRadius(10)
-                        }
+                        
                     }
                 }
                 

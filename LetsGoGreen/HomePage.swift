@@ -64,7 +64,7 @@ struct HomePage: View {
                             }
                             
                         
-                            NavigationLink(destination: EventListPage(event: Event(title: "1st of every month clean up", date: Date(), location: "Around mkhosana", time: Date(), description: "A monthly community clean up event."))) {
+                            NavigationLink(destination: EventListPage()) {
                                 CalendarView(interval: DateInterval(start: .distantPast, end: .distantFuture))
                                     .frame(height: 300)
                                     .padding()
