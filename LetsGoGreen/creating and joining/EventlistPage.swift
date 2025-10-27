@@ -40,7 +40,7 @@ struct EventListPage: View {
                     
                     
                     List {
-                        ForEach(event, id: \.id) { event in
+                        ForEach(events, id: \.id) { event in
                             VStack(alignment: .leading) {
                                 Text(event.title)
                                     .font(.headline)

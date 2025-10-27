@@ -79,9 +79,6 @@ struct createEventPage: View {
                                 
                                 context.insert(newEvent)
                                 
-                                
-//                                loadEvents()
-//                                saveEvents()
                                 navigateToList = true
                                 resetFields()
                             } label: {
@@ -93,8 +90,6 @@ struct createEventPage: View {
                             }
                             .padding(.top, 10)
                         }
-                        
-                        // Hidden NavigationLink that triggers programmatically
                         NavigationLink(
                             destination: EventListPage(),
                             isActive: $navigateToList
@@ -102,24 +97,13 @@ struct createEventPage: View {
                         }
                     }
                 
-//                .onAppear(perform: loadEvents)
+
             }
         }
         
-        //
+       
     }
-//    private func saveEvents() {
-//        if let encoded = try? JSONEncoder().encode(events) {
-//            UserDefaults.standard.set(encoded, forKey: "events")
-//        }
-//    }
-//    
-//    private func loadEvents() {
-//        if let data = UserDefaults.standard.data(forKey: "events"),
-//           let decodedEvents = try? JSONDecoder().decode([Event].self, from: data) {
-//            events = decodedEvents
-//        }
-//    }
+
     
     private func resetFields() {
         eventTitle = ""
