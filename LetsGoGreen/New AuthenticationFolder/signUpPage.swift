@@ -56,17 +56,19 @@ struct signUpPage: View {
                         .foregroundStyle(.topColour)
                         .padding()
                     
-                    NavigationLink(destination: HomePage()){
-                        Text("Sign up")
-                            .fontWeight(.semibold)
-                            .fontDesign(.serif)
-                            .foregroundColor(.darker)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 30)
-                            .background(Color.green.opacity(0.7))
-                            .cornerRadius(20)
+                    if !username.isEmpty && !email.isEmpty && !Password.isEmpty {
+                        NavigationLink(destination: HomePage()){
+                            Text("Sign up")
+                                .fontWeight(.semibold)
+                                .fontDesign(.serif)
+                                .foregroundColor(.darker)
+                                .padding(.vertical, 12)
+                                .padding(.horizontal, 30)
+                                .background(Color.green.opacity(0.7))
+                                .cornerRadius(20)
+                            
                         
-                        
+                        }
                     }
                 }
 
