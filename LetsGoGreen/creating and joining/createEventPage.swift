@@ -41,67 +41,56 @@ struct createEventPage: View {
                 .ignoresSafeArea()
                 .opacity(0.1)
                 
-                
-                
                 VStack {
                     
                     TextField("Enter event title", text: $eventTitle)
                         .padding()
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                     
-                    
                     TextField("Enter event location", text: $eventLocation)
                         .padding()
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
                     
                     TextField("Enter event description", text: $eventDescription)
                         .padding()
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                     
-                    
                     DatePicker("Event date", selection: $eventDate, displayedComponents: .date)
                         .padding()
-                    
                     
                     DatePicker("Event time", selection: $eventTime, displayedComponents: .hourAndMinute)
                         .padding()
                     
-                        
-                        if !eventTitle.isEmpty && !eventLocation.isEmpty && !eventDescription.isEmpty {
-                            Button {
-                                let newEvent = Event(title: eventTitle,
-                                    date: eventDate,
-                                    location: eventLocation,
-                                    time: eventTime,
-                                                     info: eventDescription
-                                )
-                                
-                                context.insert(newEvent)
-                                
-                                navigateToList = true
-                                resetFields()
-                            } label: {
-                                Label("Add Event", systemImage: "plus.circle.fill")
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .background(Color.green)
-                                    .cornerRadius(10)
-                            }
-                            .padding(.top, 10)
+                    if !eventTitle.isEmpty && !eventLocation.isEmpty && !eventDescription.isEmpty {
+                        Button {
+                            let newEvent = Event(title: eventTitle,
+                                                 date: eventDate,
+                                                 location: eventLocation,
+                                                 time: eventTime,
+                                                 info: eventDescription
+                            )
+                            
+                            context.insert(newEvent)
+                            
+                            navigateToList = true
+                            resetFields()
+                        } label: {
+                            Label("Add Event", systemImage: "plus.circle.fill")
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.green)
+                                .cornerRadius(10)
                         }
-                        NavigationLink(
-                            destination: EventListPage(),
-                            isActive: $navigateToList
-                        ) {
-                        }
+                        .padding(.top, 10)
                     }
-                
-
+                    NavigationLink(
+                        destination: EventListPage(),
+                        isActive: $navigateToList
+                    ) {
+                    }
+                }
             }
         }
-        
-       
     }
 
     

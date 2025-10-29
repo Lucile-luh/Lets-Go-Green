@@ -9,15 +9,14 @@ import SwiftUI
 import SwiftData
 
 struct EventListPage: View {
+    @Environment(\.modelContext) private var modelContext
     @Query var event: [Event]
-    
-    @State private var events: [Event] = []
     
     var body: some View {
         
         NavigationStack {
             ZStack {
-                
+// MARK: background
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -38,9 +37,9 @@ struct EventListPage: View {
                         .font(.largeTitle)
                         .padding()
                     
-                    
+//   MARK: list display
                     List {
-                        ForEach(events, id: \.id) { event in
+                        ForEach(event, id: \.id) { event in
                             VStack(alignment: .leading) {
                                 Text(event.title)
                                     .font(.headline)
@@ -50,10 +49,27 @@ struct EventListPage: View {
                                     .font(.subheadline)
                                 Text("Date: \(event.date, formatter: DateFormatter.shortDate) Time: \(event.time, formatter: DateFormatter.shortTime)")
                                     .font(.footnote)
-                                    
+                                HStack{
+                                    NavigationLink(destination: joinEventPage()) {
+                                        Image(systemName: "person.crop.circle.fill.badge.plus")
+                                            .imageScale(.large)
+                                            .padding(.vertical, 8)
+                                        VStack{
+                                            Text("Join")
+                                        }
+                                    }
+                                    .foregroundStyle(.darker)
+                                }
                             }
+                            
                             .padding()
                         }
+                        
+                        .onDelete(perform: deleteItems)
+        
+                          
+                        
+                        
                         NavigationLink(destination: createEventPage()) {
                             Image(systemName: "rectangle.stack.fill.badge.plus")
                                 .imageScale(.large)
@@ -72,7 +88,18 @@ struct EventListPage: View {
             }
         }
     }
-
+    // MARK: delete func
+    private func deleteItems(at offsets: IndexSet) {
+        for index in offsets {
+            let item = event[index]
+            modelContext.delete(item)
+        }
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save context after deletion: \(error)")
+        }
+    }
 }
 
 extension DateFormatter {
@@ -88,7 +115,7 @@ extension DateFormatter {
         formatter.timeStyle = .short
         return formatter
     }
-
+    
 }
 
 
