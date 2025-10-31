@@ -9,8 +9,27 @@ import SwiftUI
 
 struct joinEventPage: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            
+            ZStack {
+                Image("treePlanting").resizable().ignoresSafeArea()
+                    .opacity(0.8)
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color(red: 0.95, green: 1.0, blue: 0.95), // Light mint green
+                        Color(red: 0.3, green: 0.85, blue: 0.3)   // Leafy green
+                    ]),
+                    
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                    
+                )
+                .ignoresSafeArea()
+                .opacity(0.1)
+            }
+        }
     }
+        
 }
 
 #Preview {

@@ -11,7 +11,7 @@ import Foundation
 
 
 struct createEventPage: View {
-    @Query var event: [Event]
+    @Query var events: [Event]
     @Environment(\.modelContext) private var context
     
 //    @State private var events: [Event] = []
@@ -63,7 +63,7 @@ struct createEventPage: View {
                     
                     if !eventTitle.isEmpty && !eventLocation.isEmpty && !eventDescription.isEmpty {
                         Button {
-                            let newEvent = Event(title: eventTitle,
+                            let newEvent = LetsGoGreen.Event(title: eventTitle,
                                                  date: eventDate,
                                                  location: eventLocation,
                                                  time: eventTime,

@@ -11,7 +11,7 @@ import SwiftData
 struct EventListPage: View {
     @Environment(\.modelContext) private var modelContext
     @Query var event: [Event]
-    
+    @EnvironmentObject var viewModel: EventViewModel
     var body: some View {
         
         NavigationStack {
@@ -49,6 +49,12 @@ struct EventListPage: View {
                                     .font(.subheadline)
                                 Text("Date: \(event.date, formatter: DateFormatter.shortDate) Time: \(event.time, formatter: DateFormatter.shortTime)")
                                     .font(.footnote)
+                                
+                                Label(event.location, systemImage: "mappin.and.ellipse")
+                                
+                                        .font(.footnote)
+                                        .foregroundColor(.darker)
+                                        .fontWeight(.heavy)
                                 HStack{
                                     NavigationLink(destination: joinEventPage()) {
                                         Image(systemName: "person.crop.circle.fill.badge.plus")

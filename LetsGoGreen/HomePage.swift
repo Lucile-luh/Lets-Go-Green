@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
-//import Combine
 import UIKit
+import SwiftData
 
 struct CalendarView: UIViewRepresentable {
+    
 //    @ObservedObject var eventlist: EventListPage
     let interval: DateInterval
+   
     func makeUIView(context: Context) -> UICalendarView {
         let view = UICalendarView()
         view.calendar = Calendar(identifier: .gregorian)
@@ -20,13 +22,18 @@ struct CalendarView: UIViewRepresentable {
     }
     func updateUIView(_ uiView: UICalendarView, context: Context){
     
+        
 }
 }
 
 
 struct HomePage: View {
     @State private var currentIndex = 0
+    @State private var selectedDate = Date()
+    @State private var showEventList: Bool = false
+    @EnvironmentObject var viewModel: EventViewModel
     let images = ["black","picking","clean","CommunityClean", "handshake", "litter", "cleanUp"]
+    
 
     var body: some View {
         NavigationStack{
@@ -65,9 +72,23 @@ struct HomePage: View {
                             
                         
                             NavigationLink(destination: EventListPage()) {
-                                CalendarView(interval: DateInterval(start: .distantPast, end: .distantFuture))
-                                    .frame(height: 300)
-                                    .padding()
+                                
+                                ScrollView {
+                                    CalendarView(interval: DateInterval(start: .distantPast, end: .distantFuture))
+                                        .frame(height: 300)
+                                        .padding()
+                                
+                                Button("View Events") {
+                                                   showEventList = true
+                                               }
+                                               .buttonStyle(.borderedProminent)
+                                               .tint(.green)
+                                               
+                                               Spacer()
+                                           }
+                                .navigationDestination(isPresented: $showEventList) {
+                                    EventListPage()
+                                }
                             }
                         }
                     }

@@ -1,5 +1,5 @@
 //
-//  signUpPage.swift
+//  SignUpPage.swift
 //  LetsGoGreen
 //
 //  Created by LUCILE G MUCHEMWA on 16/10/2025.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-struct signUpPage: View {
+struct SignUpPage: View {
     @State private var username: String = ""
     @State private var Password: String = ""
     @State private var email: String = ""
@@ -34,7 +34,7 @@ struct signUpPage: View {
                     
                 )
                 .ignoresSafeArea()
-                .opacity(0.1)
+                .opacity(0.4)
                 
                 VStack {
                     Image( "appIconLTG")
@@ -60,40 +60,29 @@ struct signUpPage: View {
                         .foregroundStyle(.topColour)
                         .padding()
                     
-                    //                    if !username.isEmpty && !email.isEmpty && !Password.isEmpty {
-                    //                        NavigationLink(destination: HomePage()){
-                    //                            Text("Sign up")
-                    //                                .fontWeight(.semibold)
-                    //                                .fontDesign(.serif)
-                    //                                .foregroundColor(.darker)
-                    //                                .padding(.vertical, 12)
-                    //                                .padding(.horizontal, 30)
-                    //                                .background(Color.green.opacity(0.7))
-                    //                                .cornerRadius(20)
-                    //
+                  
                     Button(action: {
                         attemptSignUp()
-                        
                     }) {
                         ZStack{
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(.topColour)
                                 .frame(width: 180, height: 50)
                                 .shadow(radius: 5)
+                                .opacity(0.6)
                             
                             Text("Next")
                                 .foregroundStyle(.white)
                                 .fontWeight(.bold)
                                 .fontDesign(.serif)
                         }
-                        
+
                     }
                     .padding(.top, 30)
                     Spacer()
                 }
-                offset(y: 100)
+              
             }
-            
             .navigationDestination(isPresented: $navigateToHomePage){
                 HomePage()
             }
@@ -124,5 +113,5 @@ struct signUpPage: View {
 }
 
 #Preview {
-    signUpPage()
+    SignUpPage()
 }

@@ -10,11 +10,16 @@ import SwiftUI
 struct logInPage: View {
     @State private var username: String = ""
     @State private var Password: String = ""
+    @State private var alertTitle1 = ""
+    @State private var alertMessage1 = ""
+    @State private var showAlert1 = false
+    @State private var navigateToHomePage = false
+    
     
     var body: some View {
         
         NavigationStack {
-            
+
             ZStack {
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
@@ -51,48 +56,69 @@ struct logInPage: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .foregroundStyle(.topColour)
                         .padding()
-                    
-                   
-                        NavigationLink(destination: HomePage()){
-                            Text("Log In")
+    
+                    Button(action: {
+                        attempLogin()
+                    }) {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(.topColour)
+                                .opacity(0.4)
+                                .frame(width: 180, height: 50)
+                                .shadow(radius: 5)
+                            
+                            Text("Next")
+                                .foregroundStyle(.white)
                                 .fontWeight(.bold)
                                 .fontDesign(.serif)
-                                .foregroundColor(.black)
-                                .padding(.vertical, 12)
-                                .padding(.horizontal, 35)
-                                .background(Color.green)
-                                .opacity(0.7)
-                                .cornerRadius(10)
                         }
-                        
-                        .padding()
-                        
-                        
-                        
+                    }
+                    .padding()
+
                         Text("Don't have an account?")
                             .foregroundColor(.black)
                             .fontWeight(.heavy)
                             .fontDesign(.serif)
-                        
-                        
-                        
-                        NavigationLink(destination: signUpPage()){
-                            Text("Sign up")
-                                .fontWeight(.semibold)
-                                .fontDesign(.serif)
-                                .foregroundColor(.green)
-                            //                            .padding(.vertical, 12)
-                            //                            .padding(.horizontal, 30)
-                            //                            .background(Color.green.opacity(0.2))
-                            //                            .cornerRadius(10)
-                        
+                    
+                    NavigationLink(destination: SignUpPage()) {
+                        Text("Sign Up")
+                            .foregroundColor(.topColour)
+                            .fontWeight(.bold)
+                            .fontDesign(.serif)
                     }
                 }
-                
+               
             }
-//            .padding()
+            .navigationDestination(isPresented: $navigateToHomePage){
+                HomePage()
+            }
+            .alert(alertTitle1, isPresented: $showAlert1){
+                Button("Ok"){
+                    if alertTitle1.hasPrefix("Welcome"){
+                        navigateToHomePage = true
+                    }else {
+                        print("wrong")
+                    }
+                }
+            }message: {
+                Text(alertMessage1)
+            }
         }
     }
+
+    func attempLogin() {
+        if Password.count < 8 {
+            alertTitle1 = "Weak Password"
+            alertMessage1 = "Please choose a stronger password with at least 8 characters to protect your Let's Go Green account."
+            showAlert1 = true
+            return
+        }
+        let formattedName = username.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
+        alertTitle1 = "Welcome back \(formattedName)"
+        alertMessage1 = "🌿 Lets plan more sustainable adventures together."
+        showAlert1 = true
+    }
+
 }
 
 #Preview {
