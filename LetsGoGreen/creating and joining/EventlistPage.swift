@@ -16,7 +16,7 @@ struct EventListPage: View {
         
         NavigationStack {
             ZStack {
-// MARK: background
+                // MARK: background
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -37,7 +37,7 @@ struct EventListPage: View {
                         .font(.largeTitle)
                         .padding()
                     
-//   MARK: list display
+                    //   MARK: list display
                     List {
                         ForEach(event, id: \.id) { event in
                             VStack(alignment: .leading) {
@@ -52,9 +52,9 @@ struct EventListPage: View {
                                 
                                 Label(event.location, systemImage: "mappin.and.ellipse")
                                 
-                                        .font(.footnote)
-                                        .foregroundColor(.darker)
-                                        .fontWeight(.heavy)
+                                    .font(.footnote)
+                                    .foregroundColor(.darker)
+                                    .fontWeight(.heavy)
                                 HStack{
                                     NavigationLink(destination: joinEventPage()) {
                                         Image(systemName: "person.crop.circle.fill.badge.plus")
@@ -72,9 +72,10 @@ struct EventListPage: View {
                         }
                         
                         .onDelete(perform: deleteItems)
-        
-                          
                         
+                        
+                        
+                        //MARK: Create event button
                         
                         NavigationLink(destination: createEventPage()) {
                             Image(systemName: "rectangle.stack.fill.badge.plus")
@@ -82,8 +83,6 @@ struct EventListPage: View {
                                 .padding(.vertical, 8)
                         }
                         .foregroundStyle(.darker)
-                        
-                        
                     }
                     .scrollContentBackground(.hidden)
                     .onAppear {

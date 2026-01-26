@@ -26,6 +26,7 @@ struct createEventPage: View {
     var body: some View {
         NavigationStack{
             ZStack {
+// MARK: background design
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -40,7 +41,7 @@ struct createEventPage: View {
                 )
                 .ignoresSafeArea()
                 .opacity(0.1)
-                
+//MARK: user input fields
                 VStack {
                     
                     TextField("Enter event title", text: $eventTitle)
@@ -63,13 +64,12 @@ struct createEventPage: View {
                     
                     if !eventTitle.isEmpty && !eventLocation.isEmpty && !eventDescription.isEmpty {
                         Button {
-                            let newEvent = LetsGoGreen.Event(title: eventTitle,
+                            let newEvent = Event(title: eventTitle,
                                                  date: eventDate,
                                                  location: eventLocation,
                                                  time: eventTime,
                                                  info: eventDescription
                             )
-                            
                             context.insert(newEvent)
                             
                             navigateToList = true

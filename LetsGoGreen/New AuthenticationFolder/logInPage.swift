@@ -9,7 +9,7 @@ import SwiftUI
 
 struct logInPage: View {
     @State private var username: String = ""
-    @State private var Password: String = ""
+    @State private var password: String = ""
     @State private var alertTitle1 = ""
     @State private var alertMessage1 = ""
     @State private var showAlert1 = false
@@ -46,13 +46,11 @@ struct logInPage: View {
                     TextField("Username", text: $username)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .foregroundStyle(.topColour)
-                        .cornerRadius(0.6)
                         .padding()
                         .keyboardType(.emailAddress)
-                        .padding()
                        
                     
-                    SecureField("Password", text: $Password)
+                    SecureField("Password", text: $password)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .foregroundStyle(.topColour)
                         .padding()
@@ -107,7 +105,7 @@ struct logInPage: View {
     }
 
     func attempLogin() {
-        if Password.count < 8 {
+        if password.count < 8 {
             alertTitle1 = "Weak Password"
             alertMessage1 = "Please choose a stronger password with at least 8 characters to protect your Let's Go Green account."
             showAlert1 = true

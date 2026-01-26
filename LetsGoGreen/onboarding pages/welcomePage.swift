@@ -92,10 +92,6 @@ struct welcomePage: View {
                     logInPage()
                 }
             }
-            
-            
-          
-            
         }
         
     }

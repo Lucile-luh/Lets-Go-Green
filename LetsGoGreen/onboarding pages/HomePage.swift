@@ -11,7 +11,6 @@ import SwiftData
 
 struct CalendarView: UIViewRepresentable {
     
-//    @ObservedObject var eventlist: EventListPage
     let interval: DateInterval
    
     func makeUIView(context: Context) -> UICalendarView {
