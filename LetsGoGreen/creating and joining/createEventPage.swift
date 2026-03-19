@@ -90,6 +90,9 @@ struct createEventPage: View {
                     }
                 }
             }
+            .safeAreaInset(edge: .bottom) {
+                BottomNavBar()
+            }
         }
     }
 

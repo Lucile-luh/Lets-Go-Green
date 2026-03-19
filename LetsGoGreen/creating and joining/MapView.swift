@@ -16,29 +16,34 @@ extension CLLocationCoordinate2D {
 struct MapView: View {
     @State private var searchResults: [MKMapItem] = []
     var body: some View {
-        Map{
-            Annotation("Event", coordinate: .cleanUpArea) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(.background)
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(.green, lineWidth: 5)
-                    Image (systemName: "tree")
-                        .padding(5)
+        NavigationStack {
+            Map{
+                Annotation("Event", coordinate: .cleanUpArea) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(.background)
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(.green, lineWidth: 5)
+                        Image (systemName: "tree")
+                            .padding(5)
+                    }
+                }
+                .annotationTitles(.hidden)
+                
+                
+                ForEach(searchResults, id: \.self) { result in
+                    Marker(item: result)
                 }
             }
-            .annotationTitles(.hidden)
-            
-            
-            ForEach(searchResults, id: \.self) { result in
-                Marker(item: result)
-            }
-        }
-        .mapStyle(.imagery(elevation: .realistic))
-        .safeAreaInset(edge: .bottom) {
-            HStack{
-                Spacer()
-                ButtonsView(searchResults: $searchResults)
+            .mapStyle(.imagery(elevation: .realistic))
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 12) {
+                    HStack{
+                        Spacer()
+                        ButtonsView(searchResults: $searchResults)
+                    }
+                    BottomNavBar()
+                }
             }
         }
     }

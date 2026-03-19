@@ -56,7 +56,7 @@ struct EventListPage: View {
                                     .foregroundColor(.darker)
                                     .fontWeight(.heavy)
                                 HStack{
-                                    NavigationLink(destination: joinEventPage()) {
+                                    NavigationLink(destination: joinEventPage(event: event)) {
                                         Image(systemName: "person.crop.circle.fill.badge.plus")
                                             .imageScale(.large)
                                             .padding(.vertical, 8)
@@ -89,6 +89,9 @@ struct EventListPage: View {
                         
                     }
                     
+                }
+                .safeAreaInset(edge: .bottom) {
+                    BottomNavBar()
                 }
             }
         }

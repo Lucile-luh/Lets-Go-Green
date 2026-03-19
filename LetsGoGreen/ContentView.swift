@@ -11,16 +11,16 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-    
-
-            
-            welcomePage()
-
+        
+        
+        
+        welcomePage()
         
     }
-      
+    
 }
 
 #Preview {
     ContentView()
+        .environmentObject(EventViewModel())
 }
