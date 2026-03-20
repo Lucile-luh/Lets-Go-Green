@@ -121,7 +121,6 @@ struct HomePage: View {
                 BottomNavBar()
             }
         }
-        
     }
 }
 

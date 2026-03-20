@@ -11,7 +11,15 @@ import SwiftData
 struct EventListPage: View {
     @Environment(\.modelContext) private var modelContext
     @Query var event: [Event]
+    @Query var participants: [Participant]
     @EnvironmentObject var viewModel: EventViewModel
+
+    private var sortedEvents: [Event] {
+        event
+            .filter { isCompleted($0) == false }
+            .sorted { $0.date < $1.date }
+    }
+
     var body: some View {
         
         NavigationStack {
@@ -37,46 +45,12 @@ struct EventListPage: View {
                         .font(.largeTitle)
                         .padding()
                     
-                    //   MARK: list display
                     List {
-                        ForEach(event, id: \.id) { event in
-                            VStack(alignment: .leading) {
-                                Text(event.title)
-                                    .font(.headline)
-                                Text(event.info)
-                                    .font(.subheadline)
-                                Text("Location: \(event.location)")
-                                    .font(.subheadline)
-                                Text("Date: \(event.date, formatter: DateFormatter.shortDate) Time: \(event.time, formatter: DateFormatter.shortTime)")
-                                    .font(.footnote)
-                                
-                                Label(event.location, systemImage: "mappin.and.ellipse")
-                                
-                                    .font(.footnote)
-                                    .foregroundColor(.darker)
-                                    .fontWeight(.heavy)
-                                HStack{
-                                    NavigationLink(destination: joinEventPage(event: event)) {
-                                        Image(systemName: "person.crop.circle.fill.badge.plus")
-                                            .imageScale(.large)
-                                            .padding(.vertical, 8)
-                                        VStack{
-                                            Text("Join")
-                                        }
-                                    }
-                                    .foregroundStyle(.darker)
-                                }
-                            }
-                            
-                            .padding()
+                        ForEach(sortedEvents, id: \.id) { event in
+                            eventRow(for: event)
                         }
-                        
                         .onDelete(perform: deleteItems)
-                        
-                        
-                        
-                        //MARK: Create event button
-                        
+
                         NavigationLink(destination: createEventPage()) {
                             Image(systemName: "rectangle.stack.fill.badge.plus")
                                 .imageScale(.large)
@@ -85,8 +59,8 @@ struct EventListPage: View {
                         .foregroundStyle(.darker)
                     }
                     .scrollContentBackground(.hidden)
-                    .onAppear {
-                        
+                    .task {
+                        purgeCompletedEvents()
                     }
                     
                 }
@@ -96,12 +70,104 @@ struct EventListPage: View {
             }
         }
     }
-    // MARK: delete func
+
+    @ViewBuilder
+    private func eventRow(for event: Event) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(event.title)
+                    .font(.headline)
+                Spacer()
+                Text(eventStatusText(for: event))
+                    .font(.caption.weight(.semibold))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(eventStatusColor(for: event).opacity(0.15))
+                    .clipShape(Capsule())
+            }
+
+            Text(event.info)
+                .font(.subheadline)
+            Text("Location: \(event.location)")
+                .font(.subheadline)
+            Text("Date: \(event.date, formatter: DateFormatter.shortDate) Time: \(event.time, formatter: DateFormatter.shortTime)")
+                .font(.footnote)
+
+            HStack {
+                Label(event.location, systemImage: "mappin.and.ellipse")
+                    .font(.footnote)
+                    .foregroundColor(.darker)
+                    .fontWeight(.heavy)
+                Spacer()
+                Label("\(participantCount(for: event)) joined", systemImage: "person.2.fill")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+
+            NavigationLink(destination: joinEventPage(event: event)) {
+                Label("View Event", systemImage: "person.crop.circle.fill.badge.plus")
+                    .padding(.vertical, 8)
+            }
+            .foregroundStyle(.darker)
+        }
+        .padding(.vertical, 4)
+    }
+
+    private func participantCount(for event: Event) -> Int {
+        participants.filter { $0.eventTitle == event.title }.count
+    }
+
+    private func eventStatusText(for event: Event) -> String {
+        if isCompleted(event) {
+            return "Completed"
+        }
+        if Calendar.current.isDate(event.scheduledAt, equalTo: Date(), toGranularity: .day) {
+            return "Happening"
+        }
+        return "Upcoming"
+    }
+
+    private func eventStatusColor(for event: Event) -> Color {
+        if isCompleted(event) {
+            return .gray
+        }
+        if Calendar.current.isDate(event.scheduledAt, equalTo: Date(), toGranularity: .day) {
+            return .orange
+        }
+        return .green
+    }
+
+    private func isCompleted(_ event: Event) -> Bool {
+        event.scheduledAt < Date()
+    }
+
+    private func purgeCompletedEvents() {
+        let completedEvents = event.filter(isCompleted)
+
+        guard completedEvents.isEmpty == false else {
+            return
+        }
+
+        for completedEvent in completedEvents {
+            let relatedParticipants = participants.filter { $0.eventTitle == completedEvent.title }
+            for participant in relatedParticipants {
+                modelContext.delete(participant)
+            }
+            modelContext.delete(completedEvent)
+        }
+
+        saveContext()
+    }
+
     private func deleteItems(at offsets: IndexSet) {
         for index in offsets {
-            let item = event[index]
+            let item = sortedEvents[index]
             modelContext.delete(item)
         }
+        saveContext()
+    }
+
+    private func saveContext() {
         do {
             try modelContext.save()
         } catch {

@@ -24,6 +24,20 @@ class Event: Identifiable{
         self.time = time
         self.info = info
     }
-}
 
+    var scheduledAt: Date {
+        let calendar = Calendar.current
+        let eventDay = calendar.dateComponents([.year, .month, .day], from: date)
+        let eventTime = calendar.dateComponents([.hour, .minute], from: time)
+        return calendar.date(
+            from: DateComponents(
+                year: eventDay.year,
+                month: eventDay.month,
+                day: eventDay.day,
+                hour: eventTime.hour,
+                minute: eventTime.minute
+            )
+        ) ?? date
+    }
+}
 

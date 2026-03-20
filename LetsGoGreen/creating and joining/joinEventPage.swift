@@ -32,6 +32,10 @@ struct joinEventPage: View {
         participants.filter { $0.eventTitle == event.title }
     }
 
+    private var hasJoined: Bool {
+        filteredParticipants.isEmpty == false
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -52,6 +56,7 @@ struct joinEventPage: View {
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Join Event")
                             .font(.largeTitle)
+                            .fontDesign(.serif)
                             .padding(.horizontal, 16)
                             .padding(.top, 8)
 
@@ -86,6 +91,9 @@ struct joinEventPage: View {
 
                         HStack(spacing: 12) {
                             Button {
+                                guard hasJoined == false else {
+                                    return
+                                }
                                 let participant = Participant(
                                     name: name.isEmpty ? "Guest" : name,
                                     email: email,
@@ -95,11 +103,12 @@ struct joinEventPage: View {
                                 modelContext.insert(participant)
                                 resetFields()
                             } label: {
-                                Label("Join Now", systemImage: "person.crop.circle.badge.plus")
+                                Label(hasJoined ? "Joined" : "Join Now", systemImage: hasJoined ? "checkmark.circle.fill" : "person.crop.circle.badge.plus")
                                     .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(.borderedProminent)
-                            .tint(.green)
+                            .tint(hasJoined ? .gray : .green)
+                            .disabled(hasJoined)
 
                             ShareLink(item: "\(event.title) - \(event.location) on \(event.date.formatted(date: .abbreviated, time: .omitted))") {
                                 Label("Invite", systemImage: "square.and.arrow.up")
@@ -130,6 +139,11 @@ struct joinEventPage: View {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Participants (\(filteredParticipants.count))")
                                 .font(.headline)
+                            if hasJoined {
+                                Label("You are tracking this event", systemImage: "bookmark.fill")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.green)
+                            }
                             if filteredParticipants.isEmpty {
                                 Text("No one has joined yet.")
                                     .foregroundStyle(.secondary)
