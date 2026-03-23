@@ -58,6 +58,7 @@ struct CalendarView: UIViewRepresentable {
 
 
 struct HomePage: View {
+    @ObservedObject var authViewModel: AuthViewModel
     @Query var events: [Event]
     let images = ["black","picking","clean","CommunityClean", "handshake", "litter", "cleanUp"]
     
@@ -125,5 +126,5 @@ struct HomePage: View {
 }
 
 #Preview {
-    HomePage()
+    HomePage(authViewModel: AuthViewModel())
 }

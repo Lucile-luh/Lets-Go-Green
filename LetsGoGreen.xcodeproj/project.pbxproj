@@ -78,6 +78,7 @@
 			);
 			name = LetsGoGreen;
 			packageProductDependencies = (
+				BCFE68B12F6D411700034032 /* Supabase */,
 				BCFE68A72F6D411700034032 /* Auth */,
 				BCFE68A92F6D411700034032 /* Functions */,
 				BCFE68AB2F6D411700034032 /* PostgREST */,
@@ -362,6 +363,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		BCFE68B12F6D411700034032 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BCFE68A62F6D411700034032 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
 		BCFE68A72F6D411700034032 /* Auth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BCFE68A62F6D411700034032 /* XCRemoteSwiftPackageReference "supabase-swift" */;

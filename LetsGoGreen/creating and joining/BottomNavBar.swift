@@ -10,7 +10,7 @@ import SwiftUI
 struct BottomNavBar: View {
     var body: some View {
         HStack(spacing: 24) {
-            NavigationLink(destination: HomePage()) {
+            NavigationLink(destination: HomePage(authViewModel: AuthViewModel())) {
                 NavItem(label: "Home", systemImage: "house")
             }
 

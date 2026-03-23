@@ -9,6 +9,7 @@ import SwiftUI
 
 struct welcomePage: View {
     
+    @StateObject private var authViewModel = AuthViewModel()
     @State private var animateAppIcon = false
     @State private var navigateToLogIn = false
     var body: some View {
@@ -89,7 +90,7 @@ struct welcomePage: View {
                 }
                 .offset(y: 100)
                 .navigationDestination(isPresented: $navigateToLogIn) {
-                    logInPage()
+                    logInPage(authViewModel: authViewModel)
                 }
             }
         }
