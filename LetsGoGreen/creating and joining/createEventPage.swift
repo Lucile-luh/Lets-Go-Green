@@ -11,8 +11,9 @@ import Foundation
 
 
 struct createEventPage: View {
-    @Query var events: [Event]
+    @ObservedObject var authViewModel: AuthViewModel
     @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
     
 //    @State private var events: [Event] = []
     @State private var eventTitle: String = ""
@@ -21,75 +22,68 @@ struct createEventPage: View {
     @State private var eventTime: Date = Date()
     @State private var eventDate: Date = Date()
     
-    @State private var navigateToList = false
-    
     var body: some View {
-        NavigationStack{
-            ZStack {
+        ZStack {
 // MARK: background design
-                Image("treePlanting").resizable().ignoresSafeArea()
-                    .opacity(0.8)
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(red: 0.95, green: 1.0, blue: 0.95), // Light mint green
-                        Color(red: 0.3, green: 0.85, blue: 0.3)   // Leafy green
-                    ]),
-                    
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                    
-                )
-                .ignoresSafeArea()
-                .opacity(0.1)
+            Image("treePlanting").resizable().ignoresSafeArea()
+                .opacity(0.8)
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 0.95, green: 1.0, blue: 0.95), // Light mint green
+                    Color(red: 0.3, green: 0.85, blue: 0.3)   // Leafy green
+                ]),
+                
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+                
+            )
+            .ignoresSafeArea()
+            .opacity(0.1)
 //MARK: user input fields
-                VStack {
-                    
-                    TextField("Enter event title", text: $eventTitle)
-                        .padding()
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                    TextField("Enter event location", text: $eventLocation)
-                        .padding()
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                    TextField("Enter event description", text: $eventDescription)
-                        .padding()
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                    DatePicker("Event date", selection: $eventDate, displayedComponents: .date)
-                        .padding()
-                    
-                    DatePicker("Event time", selection: $eventTime, displayedComponents: .hourAndMinute)
-                        .padding()
-                    
-                    if !eventTitle.isEmpty && !eventLocation.isEmpty && !eventDescription.isEmpty {
-                        Button {
-                            let newEvent = Event(title: eventTitle,
-                                                 date: eventDate,
-                                                 location: eventLocation,
-                                                 time: eventTime,
-                                                 info: eventDescription
-                            )
-                            context.insert(newEvent)
-                            
-                            navigateToList = true
-                            resetFields()
-                        } label: {
-                            Label("Add Event", systemImage: "plus.circle.fill")
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(Color.green)
-                                .cornerRadius(10)
-                        }
-                        .padding(.top, 10)
+            VStack {
+                
+                TextField("Enter event title", text: $eventTitle)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                TextField("Enter event location", text: $eventLocation)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                TextField("Enter event description", text: $eventDescription)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                DatePicker("Event date", selection: $eventDate, displayedComponents: .date)
+                    .padding()
+                
+                DatePicker("Event time", selection: $eventTime, displayedComponents: .hourAndMinute)
+                    .padding()
+                
+                if !eventTitle.isEmpty && !eventLocation.isEmpty && !eventDescription.isEmpty {
+                    Button {
+                        let newEvent = Event(
+                            title: eventTitle,
+                            date: eventDate,
+                            location: eventLocation,
+                            time: eventTime,
+                            info: eventDescription
+                        )
+                        context.insert(newEvent)
+                        saveEventAndReturn()
+                    } label: {
+                        Label("Add Event", systemImage: "plus.circle.fill")
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.green)
+                            .cornerRadius(10)
                     }
-                    NavigationLink(
-                        destination: EventListPage(),
-                        isActive: $navigateToList
-                    ) {
-                    }
+                    .padding(.top, 10)
                 }
             }
+        }
+        .safeAreaInset(edge: .bottom) {
+            BottomNavBar(authViewModel: authViewModel)
         }
     }
 
@@ -101,9 +95,18 @@ struct createEventPage: View {
         eventTime = Date()
         eventDate = Date()
     }
+
+    private func saveEventAndReturn() {
+        do {
+            try context.save()
+            resetFields()
+            dismiss()
+        } catch {
+            print("Failed to save new event: \(error)")
+        }
+    }
 }
 
 #Preview {
-    createEventPage()
+    createEventPage(authViewModel: AuthViewModel())
 }
-

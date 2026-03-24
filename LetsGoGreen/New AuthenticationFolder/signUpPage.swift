@@ -9,13 +9,9 @@ import SwiftUI
 
 
 struct SignUpPage: View {
-    @State private var username: String = ""
-    @State private var Password: String = ""
+    @ObservedObject var authViewModel: AuthViewModel
+    @State private var password: String = ""
     @State private var email: String = ""
-    @State private var alertTitle = ""
-    @State private var alertMessage = ""
-    @State private var showAlert = false
-    @State private var navigateToHomePage = false
     
     
     var body: some View {
@@ -41,77 +37,89 @@ struct SignUpPage: View {
                         .resizable()
                         .frame(width: 300, height: 300)
                         .aspectRatio(1,contentMode: .fit)
+                    Spacer()
                     
-                    
-                    TextField("Username", text: $username)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .foregroundStyle(.topColour)
-                        .cornerRadius(0.6)
-                        .padding()
                     
                     TextField("Email", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
                         .foregroundStyle(.topColour)
                         .cornerRadius(0.6)
                         .padding()
                     
-                    SecureField("Password", text: $Password)
+                    SecureField("Password", text: $password)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .foregroundStyle(.topColour)
                         .padding()
-                    
+                        Spacer()
                   
-                    Button(action: {
-                        attemptSignUp()
-                    }) {
-                        ZStack{
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(.topColour)
-                                .frame(width: 180, height: 50)
-                                .shadow(radius: 5)
-                                .opacity(0.6)
-                            
-                            Text("Next")
-                                .foregroundStyle(.white)
-                                .fontWeight(.bold)
-                                .fontDesign(.serif)
+                    Button("Sign Up") {
+                        Task {
+                            await authViewModel.signUp(email: email, password: password)
                         }
-
                     }
+                    .disabled(authViewModel.isLoading || email.isEmpty || password.isEmpty)
+                    .buttonStyle(PlainButtonStyle())
+                    .foregroundStyle(.white)
+                    .font(Font.title.bold())
+                    .fontDesign(.serif)
                     .padding(.top, 30)
+                    
+                    if authViewModel.isLoading {
+                        ProgressView()
+                            .tint(.white)
+                    }
+                    
+                    if let statusMessage = authViewModel.statusMessage {
+                        Text(statusMessage)
+                            .font(.footnote)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal)
+                    }
+                    
+                    if let errorMessage = authViewModel.errorMessage {
+                        Text(errorMessage)
+                            .font(.footnote)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.red)
+                            .padding(.horizontal)
+                    }
+
+                    Text("Already have an account?")
+                        .foregroundColor(.black)
+                        .fontWeight(.heavy)
+                        .fontDesign(.serif)
+
+                    NavigationLink(destination: logInPage(authViewModel: authViewModel)) {
+                        Text("Log In")
+                            .foregroundColor(.topColour)
+                            .fontWeight(.bold)
+                            .fontDesign(.serif)
+                    }
+                    
                     Spacer()
                 }
               
             }
-            .navigationDestination(isPresented: $navigateToHomePage){
-                HomePage()
-            }
-            .alert(alertTitle, isPresented: $showAlert){
-                Button("Ok"){
-                    if alertTitle.starts(with: "Success"){
-                        navigateToHomePage = true
-                    }
-                }
-            }message: {
-                Text(alertMessage)
-            }
         }
     }
-    func attemptSignUp() {
-        if Password.count < 8 {
-            alertTitle = "Weak Password"
-            alertMessage = "Please choose a stronger password with at least 8 characters to protect your Let's Go Green account."
-            showAlert = true
-            return
-        }
-
-        alertTitle = "Success"
-        alertMessage = "Welcome to Let's Go Green! 🌿 You're all set to join cleanup drives and tree planting events."
-        showAlert = true
-    }
+//    func attemptSignUp() {
+//        if Password.count < 8 {
+//            alertTitle = "Weak Password"
+//            alertMessage = "Please choose a stronger password with at least 8 characters to protect your Let's Go Green account."
+//            showAlert = true
+//            return
+//        }
+//
+//        alertTitle = "Success"
+//        alertMessage = "Welcome to Let's Go Green! 🌿 You're all set to join cleanup drives and tree planting events."
+//        showAlert = true
+//    }
 
 }
 
 #Preview {
-    SignUpPage()
+    SignUpPage(authViewModel: AuthViewModel())
 }

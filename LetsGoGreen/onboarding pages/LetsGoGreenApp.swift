@@ -10,10 +10,13 @@ import SwiftData
 
 @main
 struct LetsGoGreenApp: App {
+    @StateObject private var viewModel = EventViewModel()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(viewModel)
         }
-        .modelContainer(for: Event.self)
+        .modelContainer(for: [Event.self, Participant.self])
     }
 }
