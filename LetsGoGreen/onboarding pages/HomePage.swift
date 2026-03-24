@@ -119,7 +119,7 @@ struct HomePage: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                BottomNavBar()
+                BottomNavBar(authViewModel: authViewModel)
             }
         }
     }

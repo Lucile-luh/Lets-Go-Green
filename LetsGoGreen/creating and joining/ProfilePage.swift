@@ -9,11 +9,28 @@ import SwiftUI
 import SwiftData
 
 struct ProfilePage: View {
+    @ObservedObject private var authViewModel: AuthViewModel
     @Query private var events: [Event]
     @Query private var participants: [Participant]
 
+    init(authViewModel: AuthViewModel) {
+        _authViewModel = ObservedObject(wrappedValue: authViewModel)
+    }
+
+    private var currentUserParticipants: [Participant] {
+        guard let currentUserID = authViewModel.currentUserID else {
+            return []
+        }
+
+        let currentUserEmail = authViewModel.currentUserEmail
+        return participants.filter { participant in
+            participant.userID == currentUserID ||
+            (participant.userEmail != nil && participant.userEmail == currentUserEmail)
+        }
+    }
+
     private var joinedEventTitles: Set<String> {
-        Set(participants.map(\.eventTitle))
+        Set(currentUserParticipants.map(\.eventTitle))
     }
 
     private var joinedEvents: [Event] {
@@ -53,8 +70,8 @@ struct ProfilePage: View {
                     Text("Profile")
                         .font(.largeTitle)
                     Text("Track your event activity here.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(.title)
+                        .foregroundStyle(.darker)
 
                     VStack(spacing: 12) {
                         statCard(title: "Events Joined", value: "\(joinedEvents.count)")
@@ -86,13 +103,29 @@ struct ProfilePage: View {
                         }
                         .scrollContentBackground(.hidden)
                     }
+                    
+                    Button("Sign Out") {
+                        Task {
+                            await authViewModel.logOut()
+                        }
+                    }
+                    .foregroundStyle(.green)
+                    .fontWeight(.bold)
+                    .font(.title)
+                    .fontDesign(.serif)
+                    .padding(10)
+                    
                 }
+               
             }
             .safeAreaInset(edge: .bottom) {
-                BottomNavBar()
+                BottomNavBar(authViewModel: authViewModel)
             }
         }
+        
+      
     }
+    
 
     private func statCard(title: String, value: String) -> some View {
         HStack {
@@ -107,8 +140,11 @@ struct ProfilePage: View {
         .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 14))
     }
+    
+  
+    
 }
 
-#Preview {
-    ProfilePage()
-}
+//#Preview {
+//    ProfilePage()
+//}

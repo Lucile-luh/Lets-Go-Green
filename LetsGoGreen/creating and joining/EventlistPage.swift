@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct EventListPage: View {
+    @ObservedObject var authViewModel: AuthViewModel
     @Environment(\.modelContext) private var modelContext
     @Query var event: [Event]
     @Query var participants: [Participant]
@@ -51,7 +52,7 @@ struct EventListPage: View {
                         }
                         .onDelete(perform: deleteItems)
 
-                        NavigationLink(destination: createEventPage()) {
+                        NavigationLink(destination: createEventPage(authViewModel: authViewModel)) {
                             Image(systemName: "rectangle.stack.fill.badge.plus")
                                 .imageScale(.large)
                                 .padding(.vertical, 8)
@@ -65,7 +66,7 @@ struct EventListPage: View {
                     
                 }
                 .safeAreaInset(edge: .bottom) {
-                    BottomNavBar()
+                    BottomNavBar(authViewModel: authViewModel)
                 }
             }
         }
@@ -104,7 +105,7 @@ struct EventListPage: View {
                     .foregroundStyle(.secondary)
             }
 
-            NavigationLink(destination: joinEventPage(event: event)) {
+            NavigationLink(destination: joinEventPage(authViewModel: authViewModel, event: event)) {
                 Label("View Event", systemImage: "person.crop.circle.fill.badge.plus")
                     .padding(.vertical, 8)
             }
@@ -194,5 +195,5 @@ extension DateFormatter {
 
 
 #Preview {
-    EventListPage()
+    EventListPage(authViewModel: AuthViewModel())
 }

@@ -18,6 +18,14 @@ class AuthViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var statusMessage: String?
+
+    var currentUserID: String? {
+        session?.user.id.uuidString
+    }
+
+    var currentUserEmail: String? {
+        session?.user.email?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
     
     func getInitialSession() async {
         do{

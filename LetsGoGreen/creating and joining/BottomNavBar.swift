@@ -8,25 +8,27 @@
 import SwiftUI
 
 struct BottomNavBar: View {
+    @ObservedObject var authViewModel: AuthViewModel
+
     var body: some View {
         HStack(spacing: 24) {
-            NavigationLink(destination: HomePage(authViewModel: AuthViewModel())) {
+            NavigationLink(destination: HomePage(authViewModel: authViewModel)) {
                 NavItem(label: "Home", systemImage: "house")
             }
 
-            NavigationLink(destination: EventListPage()) {
+            NavigationLink(destination: EventListPage(authViewModel: authViewModel)) {
                 NavItem(label: "Events", systemImage: "list.bullet")
             }
 
-            NavigationLink(destination: createEventPage()) {
+            NavigationLink(destination: createEventPage(authViewModel: authViewModel)) {
                 NavItem(label: "Create", systemImage: "plus.circle")
             }
 
-            NavigationLink(destination: EventListPage()) {
+            NavigationLink(destination: EventListPage(authViewModel: authViewModel)) {
                 NavItem(label: "Join", systemImage: "person.crop.circle.badge.plus")
             }
 
-            NavigationLink(destination: ProfilePage()) {
+            NavigationLink(destination: ProfilePage(authViewModel: authViewModel)) {
                 NavItem(label: "Profile", systemImage: "person.circle")
             }
         }
@@ -56,6 +58,6 @@ private struct NavItem: View {
 
 #Preview {
     NavigationStack {
-        BottomNavBar()
+        BottomNavBar(authViewModel: AuthViewModel())
     }
 }

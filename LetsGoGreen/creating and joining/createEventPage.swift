@@ -11,6 +11,7 @@ import Foundation
 
 
 struct createEventPage: View {
+    @ObservedObject var authViewModel: AuthViewModel
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     
@@ -82,7 +83,7 @@ struct createEventPage: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            BottomNavBar()
+            BottomNavBar(authViewModel: authViewModel)
         }
     }
 
@@ -107,5 +108,5 @@ struct createEventPage: View {
 }
 
 #Preview {
-    createEventPage()
+    createEventPage(authViewModel: AuthViewModel())
 }

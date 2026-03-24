@@ -86,6 +86,18 @@ struct SignUpPage: View {
                             .foregroundStyle(.red)
                             .padding(.horizontal)
                     }
+
+                    Text("Already have an account?")
+                        .foregroundColor(.black)
+                        .fontWeight(.heavy)
+                        .fontDesign(.serif)
+
+                    NavigationLink(destination: logInPage(authViewModel: authViewModel)) {
+                        Text("Log In")
+                            .foregroundColor(.topColour)
+                            .fontWeight(.bold)
+                            .fontDesign(.serif)
+                    }
                     
                     Spacer()
                 }

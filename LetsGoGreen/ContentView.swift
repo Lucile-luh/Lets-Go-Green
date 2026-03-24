@@ -18,7 +18,7 @@ struct ContentView: View {
            
             if authViewModel.isAuthenticated {
                 HomePage(authViewModel: authViewModel)
-            }else{
+            } else {
                 logInPage(authViewModel: authViewModel)
             }
         }

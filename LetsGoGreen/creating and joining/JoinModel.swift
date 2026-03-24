@@ -15,12 +15,24 @@ class Participant: Identifiable {
     var phone: String
     var eventTitle: String
     var joinedAt: Date
+    var userID: String?
+    var userEmail: String?
 
-    init(name: String, email: String, phone: String, eventTitle: String, joinedAt: Date = Date()) {
+    init(
+        name: String,
+        email: String,
+        phone: String,
+        eventTitle: String,
+        joinedAt: Date = Date(),
+        userID: String? = nil,
+        userEmail: String? = nil
+    ) {
         self.name = name
         self.email = email
         self.phone = phone
         self.eventTitle = eventTitle
         self.joinedAt = joinedAt
+        self.userID = userID
+        self.userEmail = userEmail
     }
 }

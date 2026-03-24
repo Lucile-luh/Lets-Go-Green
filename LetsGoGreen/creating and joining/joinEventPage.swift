@@ -14,6 +14,7 @@ extension CLLocationCoordinate2D {
 }
 
 struct joinEventPage: View {
+    @ObservedObject var authViewModel: AuthViewModel
     @Environment(\.modelContext) private var modelContext
     @Query var participants: [Participant]
 
@@ -32,8 +33,20 @@ struct joinEventPage: View {
         participants.filter { $0.eventTitle == event.title }
     }
 
+    private var currentUserParticipants: [Participant] {
+        guard let currentUserID = authViewModel.currentUserID else {
+            return []
+        }
+
+        let currentUserEmail = authViewModel.currentUserEmail
+        return filteredParticipants.filter { participant in
+            participant.userID == currentUserID ||
+            (participant.userEmail != nil && participant.userEmail == currentUserEmail)
+        }
+    }
+
     private var hasJoined: Bool {
-        filteredParticipants.isEmpty == false
+        currentUserParticipants.isEmpty == false
     }
 
     var body: some View {
@@ -98,7 +111,9 @@ struct joinEventPage: View {
                                     name: name.isEmpty ? "Guest" : name,
                                     email: email,
                                     phone: phone,
-                                    eventTitle: event.title
+                                    eventTitle: event.title,
+                                    userID: authViewModel.currentUserID,
+                                    userEmail: authViewModel.currentUserEmail
                                 )
                                 modelContext.insert(participant)
                                 resetFields()
@@ -169,7 +184,7 @@ struct joinEventPage: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                BottomNavBar()
+                BottomNavBar(authViewModel: authViewModel)
             }
         }
     }
@@ -205,5 +220,5 @@ struct joinEventPage: View {
 }
 
 #Preview {
-    joinEventPage(event: Event(title: "Park Cleanup", date: .now, location: "Chamabondo", time: .now, info: "Bring gloves and water."))
+    joinEventPage(authViewModel: AuthViewModel(), event: Event(title: "Park Cleanup", date: .now, location: "Chamabondo", time: .now, info: "Bring gloves and water."))
 }
