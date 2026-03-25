@@ -52,8 +52,8 @@ struct SignUpPage: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .foregroundStyle(.topColour)
                         .padding()
-                        Spacer()
-                  
+                    Spacer()
+                    
                     Button("Sign Up") {
                         Task {
                             await authViewModel.signUp(email: email, password: password)
@@ -86,12 +86,12 @@ struct SignUpPage: View {
                             .foregroundStyle(.red)
                             .padding(.horizontal)
                     }
-
+                    
                     Text("Already have an account?")
                         .foregroundColor(.black)
                         .fontWeight(.heavy)
                         .fontDesign(.serif)
-
+                    
                     NavigationLink(destination: logInPage(authViewModel: authViewModel)) {
                         Text("Log In")
                             .foregroundColor(.topColour)
@@ -101,23 +101,23 @@ struct SignUpPage: View {
                     
                     Spacer()
                 }
-              
+                
             }
         }
     }
-//    func attemptSignUp() {
-//        if Password.count < 8 {
-//            alertTitle = "Weak Password"
-//            alertMessage = "Please choose a stronger password with at least 8 characters to protect your Let's Go Green account."
-//            showAlert = true
-//            return
-//        }
-//
-//        alertTitle = "Success"
-//        alertMessage = "Welcome to Let's Go Green! 🌿 You're all set to join cleanup drives and tree planting events."
-//        showAlert = true
-//    }
-
+    //    func attemptSignUp() {
+    //        if Password.count < 8 {
+    //            alertTitle = "Weak Password"
+    //            alertMessage = "Please choose a stronger password with at least 8 characters to protect your Let's Go Green account."
+    //            showAlert = true
+    //            return
+    //        }
+    //
+    //        alertTitle = "Success"
+    //        alertMessage = "Welcome to Let's Go Green! 🌿 You're all set to join cleanup drives and tree planting events."
+    //        showAlert = true
+    //    }
+    
 }
 
 #Preview {
