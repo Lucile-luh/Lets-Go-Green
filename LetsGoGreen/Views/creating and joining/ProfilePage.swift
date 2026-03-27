@@ -9,47 +9,51 @@ import SwiftUI
 import SwiftData
 
 struct ProfilePage: View {
+    // Stores authentication state and loads events and participants from SwiftData.
     @ObservedObject private var authViewModel: AuthViewModel
     @Query private var events: [Event]
     @Query private var participants: [Participant]
-
+    
+    
     init(authViewModel: AuthViewModel) {
         _authViewModel = ObservedObject(wrappedValue: authViewModel)
     }
-
+    // Filters participants to only those linked to the currently signed-in user.
     private var currentUserParticipants: [Participant] {
         guard let currentUserID = authViewModel.currentUserID else {
             return []
         }
-
         let currentUserEmail = authViewModel.currentUserEmail
         return participants.filter { participant in
             participant.userID == currentUserID ||
             (participant.userEmail != nil && participant.userEmail == currentUserEmail)
         }
     }
-
+    // Collects the titles of events the current user has joined.
     private var joinedEventTitles: Set<String> {
         Set(currentUserParticipants.map(\.eventTitle))
     }
-
+    
+    // Matches joined event titles to full event records and sorts them by date.
     private var joinedEvents: [Event] {
         events
             .filter { joinedEventTitles.contains($0.title) }
             .sorted { $0.date < $1.date }
     }
-
+    
+    // Separates joined events into upcoming and completed groups.
     private var upcomingJoinedEvents: [Event] {
         joinedEvents.filter { $0.date >= Calendar.current.startOfDay(for: Date()) }
     }
-
+    
     private var completedJoinedEvents: [Event] {
         joinedEvents.filter { $0.date < Calendar.current.startOfDay(for: Date()) }
     }
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
+                // Background image and gradient styling.
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -62,7 +66,7 @@ struct ProfilePage: View {
                 )
                 .ignoresSafeArea()
                 .opacity(0.1)
-
+                // Profile header and event activity summary cards.
                 VStack(spacing: 12) {
                     Image(systemName: "person.circle.fill")
                         .font(.system(size: 140))
@@ -72,17 +76,17 @@ struct ProfilePage: View {
                     Text("Track your event activity here.")
                         .font(.title)
                         .foregroundStyle(.darker)
-
+                    
                     VStack(spacing: 12) {
                         statCard(title: "Events Joined", value: "\(joinedEvents.count)")
                         statCard(title: "Upcoming", value: "\(upcomingJoinedEvents.count)")
                         statCard(title: "Completed", value: "\(completedJoinedEvents.count)")
                     }
                     .padding(.horizontal, 20)
-
+                    // an empty state or a list of events the user has joined.
                     if joinedEvents.isEmpty {
                         Text("You have not joined any events yet.")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.darker)
                             .padding(.top, 8)
                     } else {
                         List {
@@ -103,7 +107,7 @@ struct ProfilePage: View {
                         }
                         .scrollContentBackground(.hidden)
                     }
-                    
+                    // Signs the user out and returns to the authentication flow.
                     Button("Sign Out") {
                         Task {
                             await authViewModel.logOut()
@@ -116,17 +120,14 @@ struct ProfilePage: View {
                     .padding(10)
                     
                 }
-               
+                
             }
             .safeAreaInset(edge: .bottom) {
                 BottomNavBar(authViewModel: authViewModel)
             }
         }
-        
-      
     }
-    
-
+    // Reusable card view for displaying profile statistics.
     private func statCard(title: String, value: String) -> some View {
         HStack {
             Text(title)
@@ -140,9 +141,6 @@ struct ProfilePage: View {
         .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 14))
     }
-    
-  
-    
 }
 
 //#Preview {

@@ -14,13 +14,14 @@ struct ContentView: View {
         
         
         Group{
-           
+            
             if authViewModel.isAuthenticated {
                 HomePage(authViewModel: authViewModel)
             } else {
                 logInPage(authViewModel: authViewModel)
             }
         }
+        
         .task {
             await authViewModel.getInitialSession()
         }

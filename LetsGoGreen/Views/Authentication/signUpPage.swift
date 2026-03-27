@@ -1,5 +1,5 @@
 //
-//  logInPage.swift
+//  SignUpPage.swift
 //  LetsGoGreen
 //
 //  Created by LUCILE G MUCHEMWA on 16/10/2025.
@@ -7,16 +7,17 @@
 
 import SwiftUI
 
-struct logInPage: View {
+
+struct SignUpPage: View {
     @ObservedObject var authViewModel: AuthViewModel
-    @State private var email: String = ""
     @State private var password: String = ""
+    @State private var email: String = ""
+    
     
     var body: some View {
-        
-        NavigationStack {
-            
+        NavigationStack{
             ZStack {
+                // Background image and gradient styling.
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -30,46 +31,59 @@ struct logInPage: View {
                     
                 )
                 .ignoresSafeArea()
-                .opacity(0.1)
+                .opacity(0.4)
                 
                 VStack {
+                    // Displays the app icon.
                     Image( "appIconLTG")
                         .resizable()
                         .frame(width: 300, height: 300)
                         .aspectRatio(1,contentMode: .fit)
+                    Spacer()
                     
-                    
-                    TextField("email", text: $email)
+                    // Collects the details needed to create an account.
+                    TextField("Email", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                         .foregroundStyle(.topColour)
+                        .cornerRadius(0.6)
                         .padding()
-                        .keyboardType(.emailAddress)
-                    
                     
                     SecureField("Password", text: $password)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .foregroundStyle(.topColour)
                         .padding()
+                    Spacer()
                     
-                    Button("Sign In"){
-                        Task{
-                            await authViewModel.logIn(email: email, password: password)
+                    // Sends the sign-up request to Supabase.
+                    Button("Sign Up") {
+                        Task {
+                            await authViewModel.signUp(email: email, password: password)
                         }
                     }
                     .disabled(authViewModel.isLoading || email.isEmpty || password.isEmpty)
+                    .buttonStyle(PlainButtonStyle())
                     .foregroundStyle(.white)
-                    .fontWeight(.bold)
-                    .font(.title)
+                    .font(Font.title.bold())
                     .fontDesign(.serif)
-                    .padding(10)
+                    .padding(.top, 30)
                     
                     if authViewModel.isLoading {
                         ProgressView()
                             .tint(.white)
                     }
                     
+                    // Shows success messaging such as email.
+                    if let statusMessage = authViewModel.statusMessage {
+                        Text(statusMessage)
+                            .font(.footnote)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal)
+                    }
+                    
+                    // Displays the latest sign-up error.
                     if let errorMessage = authViewModel.errorMessage {
                         Text(errorMessage)
                             .font(.footnote)
@@ -77,42 +91,41 @@ struct logInPage: View {
                             .foregroundStyle(.red)
                             .padding(.horizontal)
                     }
-
-        
-                    Text("Don't have an account?")
+                    
+                    // Links returning users back to the login screen.
+                    Text("Already have an account?")
                         .foregroundColor(.black)
                         .fontWeight(.heavy)
                         .fontDesign(.serif)
                     
-                    NavigationLink(destination: SignUpPage(authViewModel: authViewModel)) {
-                        Text("Sign Up")
+                    NavigationLink(destination: logInPage(authViewModel: authViewModel)) {
+                        Text("Log In")
                             .foregroundColor(.topColour)
                             .fontWeight(.bold)
                             .fontDesign(.serif)
                     }
+                    
+                    Spacer()
                 }
                 
             }
-            
         }
     }
+    //    func attemptSignUp() {
+    //        if Password.count < 8 {
+    //            alertTitle = "Weak Password"
+    //            alertMessage = "Please choose a stronger password with at least 8 characters to protect your Let's Go Green account."
+    //            showAlert = true
+    //            return
+    //        }
+    //
+    //        alertTitle = "Success"
+    //        alertMessage = "Welcome to Let's Go Green! 🌿 You're all set to join cleanup drives and tree planting events."
+    //        showAlert = true
+    //    }
+    
 }
 
-//    func attempLogin() {
-//        if password.count < 8 {
-//            alertTitle1 = "Weak Password"
-//            alertMessage1 = "Please choose a stronger password with at least 8 characters to protect your Let's Go Green account."
-//            showAlert1 = true
-//            return
-//        }
-//        let formattedName = email.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
-//        alertTitle1 = "Welcome back"
-//        alertMessage1 = "🌿 Lets plan more sustainable adventures together."
-//        showAlert1 = true
-//    }
-
-//    }
-
 #Preview {
-    logInPage(authViewModel: AuthViewModel())
+    SignUpPage(authViewModel: AuthViewModel())
 }

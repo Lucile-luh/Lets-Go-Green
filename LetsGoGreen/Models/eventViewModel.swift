@@ -10,14 +10,12 @@ internal import Combine
 
 @MainActor
 class EventViewModel: ObservableObject {
-    
+    // Holds event data shared between views when needed.
     @Published var events: [Event] = []
     
-//    init() {
-//        
-//    }
+    // Returns the events scheduled on the selected calendar day.
     func events(for date: Date) -> [Event] {
-            let calendar = Calendar.current
-            return events.filter { calendar.isDate($0.date, inSameDayAs: date) }
-        }
+        let calendar = Calendar.current
+        return events.filter { calendar.isDate($0.date, inSameDayAs: date) }
+    }
 }

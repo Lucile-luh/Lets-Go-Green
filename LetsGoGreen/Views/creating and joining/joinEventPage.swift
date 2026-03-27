@@ -10,6 +10,7 @@ import SwiftData
 import MapKit
 
 extension CLLocationCoordinate2D {
+    // Fallback coordinate used until the event location is geocoded.
     static let cleanUpArea = CLLocationCoordinate2D(latitude: -17.93378, longitude: 25.81196)
 }
 
@@ -17,7 +18,7 @@ struct joinEventPage: View {
     @ObservedObject var authViewModel: AuthViewModel
     @Environment(\.modelContext) private var modelContext
     @Query var participants: [Participant]
-
+    
     let event: Event
     @State private var name: String = ""
     @State private var email: String = ""
@@ -28,30 +29,34 @@ struct joinEventPage: View {
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     ))
     @State private var eventCoordinate: CLLocationCoordinate2D = .cleanUpArea
-
+    
+    // Limits the participant list to people who joined this event.
     private var filteredParticipants: [Participant] {
         participants.filter { $0.eventTitle == event.title }
     }
-
+    
+    // Finds participant records that belong to the signed-in user.
     private var currentUserParticipants: [Participant] {
         guard let currentUserID = authViewModel.currentUserID else {
             return []
         }
-
+        
         let currentUserEmail = authViewModel.currentUserEmail
         return filteredParticipants.filter { participant in
             participant.userID == currentUserID ||
             (participant.userEmail != nil && participant.userEmail == currentUserEmail)
         }
     }
-
+    
+    // Prevents the same signed-in user from joining an event twice.
     private var hasJoined: Bool {
         currentUserParticipants.isEmpty == false
     }
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
+                // Background image and gradient styling.
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -64,15 +69,16 @@ struct joinEventPage: View {
                 )
                 .ignoresSafeArea()
                 .opacity(0.1)
-
+                
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
+                        // Displays the selected event's details.
                         Text("Join Event")
                             .font(.largeTitle)
                             .fontDesign(.serif)
                             .padding(.horizontal, 16)
                             .padding(.top, 8)
-
+                        
                         VStack(alignment: .leading, spacing: 6) {
                             Text(event.title)
                                 .font(.headline)
@@ -87,7 +93,8 @@ struct joinEventPage: View {
                         .background(.ultraThinMaterial)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .padding(.horizontal, 16)
-
+                        
+                        // Centers the map on the event location.
                         Map(position: $mapPosition) {
                             Annotation("Event", coordinate: eventCoordinate) {
                                 Image(systemName: "mappin.circle.fill")
@@ -101,7 +108,8 @@ struct joinEventPage: View {
                         .task {
                             await updateMapForEvent()
                         }
-
+                        
+                        // Lets the user join the event or share it with others.
                         HStack(spacing: 12) {
                             Button {
                                 guard hasJoined == false else {
@@ -124,7 +132,7 @@ struct joinEventPage: View {
                             .buttonStyle(.borderedProminent)
                             .tint(hasJoined ? .gray : .green)
                             .disabled(hasJoined)
-
+                            
                             ShareLink(item: "\(event.title) - \(event.location) on \(event.date.formatted(date: .abbreviated, time: .omitted))") {
                                 Label("Invite", systemImage: "square.and.arrow.up")
                                     .frame(maxWidth: .infinity)
@@ -133,7 +141,8 @@ struct joinEventPage: View {
                             .tint(.green)
                         }
                         .padding(.horizontal, 16)
-
+                        
+                        // Collects optional participant details before joining.
                         DisclosureGroup("Add details", isExpanded: $showDetails) {
                             VStack(alignment: .leading, spacing: 12) {
                                 TextField("Full name", text: $name)
@@ -150,7 +159,8 @@ struct joinEventPage: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                         .padding(.horizontal, 16)
                         .padding(.bottom, 16)
-
+                        
+                        // Shows everyone currently registered for the event.
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Participants (\(filteredParticipants.count))")
                                 .font(.headline)
@@ -188,7 +198,8 @@ struct joinEventPage: View {
             }
         }
     }
-
+    
+    // Clears the optional participant details after joining.
     private func resetFields() {
         name = ""
         email = ""
@@ -196,6 +207,7 @@ struct joinEventPage: View {
         showDetails = false
     }
     
+    // Converts the event's address into map coordinates for the  map.
     private func updateMapForEvent() async {
         guard let request = MKGeocodingRequest(addressString: event.location) else {
             return
@@ -216,7 +228,7 @@ struct joinEventPage: View {
             // Keep default coordinate if geocoding fails.
         }
     }
-        
+    
 }
 
 #Preview {

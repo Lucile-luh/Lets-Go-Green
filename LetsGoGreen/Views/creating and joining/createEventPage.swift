@@ -15,7 +15,7 @@ struct createEventPage: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     
-//    @State private var events: [Event] = []
+    // Stores form input while the user creates a new event.
     @State private var eventTitle: String = ""
     @State private var eventDescription: String = ""
     @State private var eventLocation: String = ""
@@ -24,7 +24,7 @@ struct createEventPage: View {
     
     var body: some View {
         ZStack {
-// MARK: background design
+            // Background image and gradient styling.
             Image("treePlanting").resizable().ignoresSafeArea()
                 .opacity(0.8)
             LinearGradient(
@@ -39,9 +39,8 @@ struct createEventPage: View {
             )
             .ignoresSafeArea()
             .opacity(0.1)
-//MARK: user input fields
             VStack {
-                
+                // Collects the event details before saving them to SwiftData.
                 TextField("Enter event title", text: $eventTitle)
                     .padding()
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -60,6 +59,7 @@ struct createEventPage: View {
                 DatePicker("Event time", selection: $eventTime, displayedComponents: .hourAndMinute)
                     .padding()
                 
+                //  enables event creation when the required fields are filled in.
                 if !eventTitle.isEmpty && !eventLocation.isEmpty && !eventDescription.isEmpty {
                     Button {
                         let newEvent = Event(
@@ -86,8 +86,8 @@ struct createEventPage: View {
             BottomNavBar(authViewModel: authViewModel)
         }
     }
-
     
+    // Clears the form after a successful save.
     private func resetFields() {
         eventTitle = ""
         eventDescription = ""
@@ -95,7 +95,8 @@ struct createEventPage: View {
         eventTime = Date()
         eventDate = Date()
     }
-
+    
+    // Persists the new event and returns to the previous screen.
     private func saveEventAndReturn() {
         do {
             try context.save()

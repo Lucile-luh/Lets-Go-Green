@@ -14,18 +14,19 @@ struct EventListPage: View {
     @Query var event: [Event]
     @Query var participants: [Participant]
     @EnvironmentObject var viewModel: EventViewModel
-
+    
+    // Shows only events that have not passed yet, sorted by date.
     private var sortedEvents: [Event] {
         event
             .filter { isCompleted($0) == false }
             .sorted { $0.date < $1.date }
     }
-
+    
     var body: some View {
         
         NavigationStack {
             ZStack {
-                // MARK: background
+                // Background image and gradient styling.
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -41,7 +42,7 @@ struct EventListPage: View {
                 .ignoresSafeArea()
                 .opacity(0.2)
                 VStack {
-                    
+                    // Lists available events and exposes creation and deletion actions.
                     Text("Event List")
                         .font(.largeTitle)
                         .padding()
@@ -51,7 +52,7 @@ struct EventListPage: View {
                             eventRow(for: event)
                         }
                         .onDelete(perform: deleteItems)
-
+                        
                         NavigationLink(destination: createEventPage(authViewModel: authViewModel)) {
                             Image(systemName: "rectangle.stack.fill.badge.plus")
                                 .imageScale(.large)
@@ -71,9 +72,10 @@ struct EventListPage: View {
             }
         }
     }
-
+    
     @ViewBuilder
     private func eventRow(for event: Event) -> some View {
+        // Summarizes one event and links to the join/details screen.
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(event.title)
@@ -86,14 +88,14 @@ struct EventListPage: View {
                     .background(eventStatusColor(for: event).opacity(0.15))
                     .clipShape(Capsule())
             }
-
+            
             Text(event.info)
                 .font(.subheadline)
             Text("Location: \(event.location)")
                 .font(.subheadline)
             Text("Date: \(event.date, formatter: DateFormatter.shortDate) Time: \(event.time, formatter: DateFormatter.shortTime)")
                 .font(.footnote)
-
+            
             HStack {
                 Label(event.location, systemImage: "mappin.and.ellipse")
                     .font(.footnote)
@@ -104,7 +106,7 @@ struct EventListPage: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-
+            
             NavigationLink(destination: joinEventPage(authViewModel: authViewModel, event: event)) {
                 Label("View Event", systemImage: "person.crop.circle.fill.badge.plus")
                     .padding(.vertical, 8)
@@ -113,11 +115,12 @@ struct EventListPage: View {
         }
         .padding(.vertical, 4)
     }
-
+    
     private func participantCount(for event: Event) -> Int {
         participants.filter { $0.eventTitle == event.title }.count
     }
-
+    
+    // Converts an event date into a user-facing status label.
     private func eventStatusText(for event: Event) -> String {
         if isCompleted(event) {
             return "Completed"
@@ -127,7 +130,8 @@ struct EventListPage: View {
         }
         return "Upcoming"
     }
-
+    
+    // Matches each event status with a color used in the UI.
     private func eventStatusColor(for event: Event) -> Color {
         if isCompleted(event) {
             return .gray
@@ -137,18 +141,20 @@ struct EventListPage: View {
         }
         return .green
     }
-
+    
+    // Determines whether an event's scheduled date and time have already passed.
     private func isCompleted(_ event: Event) -> Bool {
         event.scheduledAt < Date()
     }
-
+    
+    // Removes expired events and their participant records from local storage.
     private func purgeCompletedEvents() {
         let completedEvents = event.filter(isCompleted)
-
+        
         guard completedEvents.isEmpty == false else {
             return
         }
-
+        
         for completedEvent in completedEvents {
             let relatedParticipants = participants.filter { $0.eventTitle == completedEvent.title }
             for participant in relatedParticipants {
@@ -156,10 +162,11 @@ struct EventListPage: View {
             }
             modelContext.delete(completedEvent)
         }
-
+        
         saveContext()
     }
-
+    
+    // Deletes events selected from the list.
     private func deleteItems(at offsets: IndexSet) {
         for index in offsets {
             let item = sortedEvents[index]
@@ -167,7 +174,8 @@ struct EventListPage: View {
         }
         saveContext()
     }
-
+    
+    // Saves changes after deleting or cleaning up records.
     private func saveContext() {
         do {
             try modelContext.save()
@@ -178,6 +186,7 @@ struct EventListPage: View {
 }
 
 extension DateFormatter {
+    // Formatter used for compact event date labels.
     static var shortDate: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -185,6 +194,7 @@ extension DateFormatter {
         return formatter
     }
     
+    // Formatter used for compact event time labels.
     static var shortTime: DateFormatter {
         let formatter = DateFormatter()
         formatter.timeStyle = .short

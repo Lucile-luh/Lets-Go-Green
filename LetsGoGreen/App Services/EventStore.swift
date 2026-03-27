@@ -24,7 +24,8 @@ class Event: Identifiable{
         self.time = time
         self.info = info
     }
-
+    
+    // Combines the stored date and time into a single value for event status checks.
     var scheduledAt: Date {
         let calendar = Calendar.current
         let eventDay = calendar.dateComponents([.year, .month, .day], from: date)
@@ -40,4 +41,3 @@ class Event: Identifiable{
         ) ?? date
     }
 }
-
