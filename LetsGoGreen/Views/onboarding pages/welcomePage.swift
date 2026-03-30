@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct welcomePage: View {
-    
+    @StateObject private var authViewModel = AuthViewModel()
     @State private var animateAppIcon = false
     @State private var navigateToLogIn = false
     var body: some View {
         
         NavigationStack {
-            
             ZStack {
+                // Background image and gradient styling.
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -31,14 +31,12 @@ struct welcomePage: View {
                 .ignoresSafeArea()
                 .opacity(0.1)
                 
-                
+                // Introduces the app and routes the user into the login flow.
                 VStack(spacing: 20) {
                     Image("appIconLTG")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 250, height: 250)
-                    
-                    
                     
                     Text("Welcome to ")
                         .fontDesign(.rounded)
@@ -47,26 +45,15 @@ struct welcomePage: View {
                         .foregroundColor(.topColour)
                     
                     
-                    //                    Spacer()
-                    
                     Text("a green planner for organizing community clean-up and tree-planting events..")
                         .fontDesign(.serif)
                         .fontWeight(.bold)
-                    //                    .padding(10)
+                    
                         .font(.title2)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.topColour)
                     
-                    //                    Spacer()
-                    
-                    //                    NavigationLink(destination: logInPage()){
-                    //                        Text("Continue")
-                    //                            .fontWeight(.semibold)
-                    //                            .foregroundColor(.darker)
-                    //                            .padding(.vertical, 12)
-                    //                            .padding(.horizontal, 30)
-                    //                            .background(Color.green.opacity(0.2))
-                    //                            .cornerRadius(10)
+                    // Navigates from the welcome screen to the login screen.
                     Button(action: {
                         navigateToLogIn = true
                     }) {
@@ -89,17 +76,13 @@ struct welcomePage: View {
                 }
                 .offset(y: 100)
                 .navigationDestination(isPresented: $navigateToLogIn) {
-                    logInPage()
+                    logInPage(authViewModel: authViewModel)
                 }
             }
         }
-        
     }
-        
-        
 }
 
 #Preview {
     welcomePage()
 }
-

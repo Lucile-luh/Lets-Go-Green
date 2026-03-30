@@ -1,0 +1,132 @@
+//
+//  joinAndCreatePage.swift
+//  LetsGoGreen
+//
+//  Created by LUCILE G MUCHEMWA on 16/10/2025.
+//
+
+import SwiftUI
+import UIKit
+import SwiftData
+
+struct CalendarView: UIViewRepresentable {
+    let interval: DateInterval
+    var eventDates: [Date]
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    // Creates the UIKit calendar view used inside SwiftUI.
+    func makeUIView(context: Context) -> UICalendarView {
+        let view = UICalendarView()
+        view.calendar = Calendar(identifier: .gregorian)
+        view.availableDateRange = interval
+        view.delegate = context.coordinator
+        
+        return view
+    }
+    
+    // Refreshes the highlighted dates whenever the event list changes.
+    func updateUIView(_ uiView: UICalendarView, context: Context) {
+        uiView.reloadDecorations(forDateComponents: eventDates.map {
+            Calendar.current.dateComponents([.year, .month, .day], from: $0)
+        }, animated: true)
+    }
+    
+    // Adds a marker to calendar dates that have events.
+    class Coordinator: NSObject, UICalendarViewDelegate {
+        
+        var parent: CalendarView
+        let calendar = Calendar.current
+        
+        init(_ parent: CalendarView) {
+            self.parent = parent
+        }
+        
+        func calendarView(_ calendarView: UICalendarView,
+                          decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
+            
+            guard let date = calendar.date(from: dateComponents) else { return nil }
+            
+            if parent.eventDates.contains(where: { calendar.isDate($0, inSameDayAs: date) }) {
+                return .default(color: .green, size: .medium)
+            }
+            return nil
+        }
+    }
+    
+}
+
+
+struct HomePage: View {
+    @ObservedObject var authViewModel: AuthViewModel
+    @Query var events: [Event]
+    // Supplies the images shown in the horizontal scrollview.
+    let images = ["black","picking","clean","CommunityClean", "handshake", "litter", "cleanUp"]
+    var body: some View {
+        NavigationStack{
+            ZStack {
+                // Background image and gradient styling.
+                Image("treePlanting").resizable().ignoresSafeArea()
+                    .opacity(0.8)
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color(red: 0.93, green: 1.0, blue: 0.93),
+                        Color(red: 0.2, green: 0.7, blue: 0.35)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                .opacity(0.2)
+                // shows the title, image gallery, and event calendar on the home screen.
+                VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Let’s Go Green")
+                            .font(.system(size: 30, weight: .bold, design: .rounded))
+                        Text("Find local cleanups, plant trees, and join your community.")
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.top, 8)
+                    .padding(.horizontal, 16)
+                    VStack{
+                        // Shows community cleanup and tree-planting images in a horizontal scrollview.
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(0..<images.count, id: \.self) { index in
+                                    Image(images[index])
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 300, height: 280)
+                                        .clipped()
+                                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                                        .shadow(radius: 10)
+                                        .padding()
+                                }
+                            }
+                        }
+                        .padding(.bottom, 16)
+                        // Displays the calendar with dates that contain saved events.
+                        ScrollView {
+                            CalendarView(
+                                interval: DateInterval(start: .distantPast, end: .distantFuture),
+                                eventDates: events.map { $0.date }
+                            )
+                            .frame(height: 300)
+                            .padding()
+                            .padding(.top, 16)
+                        }
+                    }
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                BottomNavBar(authViewModel: authViewModel)
+            }
+        }
+    }
+}
+
+#Preview {
+    HomePage(authViewModel: AuthViewModel())
+}
