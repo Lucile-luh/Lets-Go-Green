@@ -21,7 +21,7 @@ From a technical perspective, the app is built with SwiftUI for the interface, S
 
 
 ## Requirements
-- Xcode 15.0 or later
+- Xcode 26.3.0 or later
 - iOS 17.0+ / macOS 14.0+ (adjust based on your deployment target)
 - Swift 5.9+
 
