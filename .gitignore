@@ -6,4 +6,14 @@ xcuserdata/
 *.xcuserstate
 
 
+# macOS junk
+.DS_Store
+
+# Xcode user & shared data
+xcuserdata/
+xcshareddata/
+*.xcuserstate
+
+# Local config file (don’t push API keys)
+LetsGoGreen/Config.xcconfig
 
