@@ -8,20 +8,20 @@
 import SwiftUI
 
 
-
 struct ContentView: View {
     @StateObject private var authViewModel = AuthViewModel()
     var body: some View {
         
         
         Group{
-           
+            
             if authViewModel.isAuthenticated {
                 HomePage(authViewModel: authViewModel)
             } else {
                 logInPage(authViewModel: authViewModel)
             }
         }
+        
         .task {
             await authViewModel.getInitialSession()
         }

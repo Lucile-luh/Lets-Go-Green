@@ -10,15 +10,13 @@ import UIKit
 import SwiftData
 
 struct CalendarView: UIViewRepresentable {
-    
     let interval: DateInterval
     var eventDates: [Date]
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-    
-    
+    // Creates the UIKit calendar view used inside SwiftUI.
     func makeUIView(context: Context) -> UICalendarView {
         let view = UICalendarView()
         view.calendar = Calendar(identifier: .gregorian)
@@ -27,12 +25,15 @@ struct CalendarView: UIViewRepresentable {
         
         return view
     }
+    
+    // Refreshes the highlighted dates whenever the event list changes.
     func updateUIView(_ uiView: UICalendarView, context: Context) {
         uiView.reloadDecorations(forDateComponents: eventDates.map {
             Calendar.current.dateComponents([.year, .month, .day], from: $0)
         }, animated: true)
     }
     
+    // Adds a marker to calendar dates that have events.
     class Coordinator: NSObject, UICalendarViewDelegate {
         
         var parent: CalendarView
@@ -60,12 +61,12 @@ struct CalendarView: UIViewRepresentable {
 struct HomePage: View {
     @ObservedObject var authViewModel: AuthViewModel
     @Query var events: [Event]
+    // Supplies the images shown in the horizontal scrollview.
     let images = ["black","picking","clean","CommunityClean", "handshake", "litter", "cleanUp"]
-    
-    
     var body: some View {
         NavigationStack{
             ZStack {
+                // Background image and gradient styling.
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -78,7 +79,7 @@ struct HomePage: View {
                 )
                 .ignoresSafeArea()
                 .opacity(0.2)
-
+                // shows the title, image gallery, and event calendar on the home screen.
                 VStack(alignment: .leading, spacing: 16) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Let’s Go Green")
@@ -90,32 +91,33 @@ struct HomePage: View {
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
                     VStack{
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(0..<images.count, id: \.self) { index in
-                                Image(images[index])
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 300, height: 280)
-                                    .clipped()
-                                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                                    .shadow(radius: 10)
-                                    .padding()
+                        // Shows community cleanup and tree-planting images in a horizontal scrollview.
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(0..<images.count, id: \.self) { index in
+                                    Image(images[index])
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 300, height: 280)
+                                        .clipped()
+                                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                                        .shadow(radius: 10)
+                                        .padding()
+                                }
                             }
                         }
+                        .padding(.bottom, 16)
+                        // Displays the calendar with dates that contain saved events.
+                        ScrollView {
+                            CalendarView(
+                                interval: DateInterval(start: .distantPast, end: .distantFuture),
+                                eventDates: events.map { $0.date }
+                            )
+                            .frame(height: 300)
+                            .padding()
+                            .padding(.top, 16)
+                        }
                     }
-                    .padding(.bottom, 16)
-                    
-                    ScrollView {
-                        CalendarView(
-                            interval: DateInterval(start: .distantPast, end: .distantFuture),
-                            eventDates: events.map { $0.date }
-                        )
-                        .frame(height: 300)
-                        .padding()
-                        .padding(.top, 16)
-                    }
-                }
                 }
             }
             .safeAreaInset(edge: .bottom) {

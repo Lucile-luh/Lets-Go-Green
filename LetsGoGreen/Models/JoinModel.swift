@@ -17,7 +17,8 @@ class Participant: Identifiable {
     var joinedAt: Date
     var userID: String?
     var userEmail: String?
-
+    
+    // Stores one user's participation record for a specific event.
     init(
         name: String,
         email: String,

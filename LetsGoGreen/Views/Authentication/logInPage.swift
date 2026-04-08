@@ -17,6 +17,7 @@ struct logInPage: View {
         NavigationStack {
             
             ZStack {
+                // Background image and gradient styling.
                 Image("treePlanting").resizable().ignoresSafeArea()
                     .opacity(0.8)
                 LinearGradient(
@@ -33,12 +34,13 @@ struct logInPage: View {
                 .opacity(0.1)
                 
                 VStack {
+                    // Shows the app icon.
                     Image( "appIconLTG")
                         .resizable()
                         .frame(width: 300, height: 300)
                         .aspectRatio(1,contentMode: .fit)
                     
-                    
+                    // Collects the user's login credentials.
                     TextField("email", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .textInputAutocapitalization(.never)
@@ -53,6 +55,7 @@ struct logInPage: View {
                         .foregroundStyle(.topColour)
                         .padding()
                     
+                    // Starts the  sign-in request.
                     Button("Sign In"){
                         Task{
                             await authViewModel.logIn(email: email, password: password)
@@ -70,6 +73,7 @@ struct logInPage: View {
                             .tint(.white)
                     }
                     
+                    // Displays the latest authentication error returned by Supabase.
                     if let errorMessage = authViewModel.errorMessage {
                         Text(errorMessage)
                             .font(.footnote)
@@ -77,8 +81,8 @@ struct logInPage: View {
                             .foregroundStyle(.red)
                             .padding(.horizontal)
                     }
-
-        
+                    
+                    // Links new users to the account creation page.
                     Text("Don't have an account?")
                         .foregroundColor(.black)
                         .fontWeight(.heavy)
