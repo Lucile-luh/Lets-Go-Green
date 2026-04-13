@@ -109,6 +109,8 @@ struct joinEventPage: View {
                             await updateMapForEvent()
                         }
                         
+                        
+                        
                         // Lets the user join the event or share it with others.
                         HStack(spacing: 12) {
                             Button {
@@ -142,7 +144,7 @@ struct joinEventPage: View {
                         }
                         .padding(.horizontal, 16)
                         
-                        // Collects optional participant details before joining.
+                        
                         DisclosureGroup("Add details", isExpanded: $showDetails) {
                             VStack(alignment: .leading, spacing: 12) {
                                 TextField("Full name", text: $name)

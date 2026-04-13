@@ -84,9 +84,11 @@ struct HomePage: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Let’s Go Green")
                             .font(.system(size: 30, weight: .bold, design: .rounded))
+                            .fontDesign(.serif)
                         Text("Find local cleanups, plant trees, and join your community.")
                             .font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.darker)
+                            .fontDesign(.serif)
                     }
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
