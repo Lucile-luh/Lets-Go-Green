@@ -62,7 +62,7 @@ struct EventListPage: View {
                     }
                     .scrollContentBackground(.hidden)
                     .task {
-                        purgeCompletedEvents()
+                        removeCompletedEvents()
                     }
                     
                 }
@@ -75,7 +75,7 @@ struct EventListPage: View {
     
     @ViewBuilder
     private func eventRow(for event: Event) -> some View {
-        // Summarizes one event and links to the join/details screen.
+        // Summarizes the details of one event and links to the joinevent page.
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(event.title)
@@ -120,7 +120,7 @@ struct EventListPage: View {
         participants.filter { $0.eventTitle == event.title }.count
     }
     
-    // Converts an event date into a user-facing status label.
+    //  user-facing status label for events based on the dates .
     private func eventStatusText(for event: Event) -> String {
         if isCompleted(event) {
             return "Completed"
@@ -131,7 +131,7 @@ struct EventListPage: View {
         return "Upcoming"
     }
     
-    // Matches each event status with a color used in the UI.
+   
     private func eventStatusColor(for event: Event) -> Color {
         if isCompleted(event) {
             return .gray
@@ -142,13 +142,12 @@ struct EventListPage: View {
         return .green
     }
     
-    // Determines whether an event's scheduled date and time have already passed.
     private func isCompleted(_ event: Event) -> Bool {
         event.scheduledAt < Date()
     }
     
     // Removes expired events and their participant records from local storage.
-    private func purgeCompletedEvents() {
+    private func removeCompletedEvents() {
         let completedEvents = event.filter(isCompleted)
         
         guard completedEvents.isEmpty == false else {
@@ -186,7 +185,7 @@ struct EventListPage: View {
 }
 
 extension DateFormatter {
-    // Formatter used for compact event date labels.
+    // Formatter used for event date labels.
     static var shortDate: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -194,7 +193,7 @@ extension DateFormatter {
         return formatter
     }
     
-    // Formatter used for compact event time labels.
+    // Formatter used for event time labels.
     static var shortTime: DateFormatter {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
