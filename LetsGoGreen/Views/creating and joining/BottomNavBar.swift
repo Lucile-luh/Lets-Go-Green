@@ -7,31 +7,44 @@
 
 import SwiftUI
 
+enum BottomNavDestination {
+    case home
+    case events
+    case create
+    case profile
+}
+
 struct BottomNavBar: View {
     @ObservedObject var authViewModel: AuthViewModel
+    let currentPage: BottomNavDestination
     
     var body: some View {
         // Provides quick navigation between the app's main screens.
         HStack(spacing: 24) {
-            NavigationLink(destination: HomePage(authViewModel: authViewModel)) {
-                NavItem(label: "Home", systemImage: "house")
-            }
-            
-            NavigationLink(destination: EventListPage(authViewModel: authViewModel)) {
-                NavItem(label: "Events", systemImage: "list.bullet")
-            }
-            
-            NavigationLink(destination: createEventPage(authViewModel: authViewModel)) {
-                NavItem(label: "Create", systemImage: "plus.circle")
-            }
-            
-            NavigationLink(destination: EventListPage(authViewModel: authViewModel)) {
-                NavItem(label: "Join", systemImage: "person.crop.circle.badge.plus")
-            }
-            
-            NavigationLink(destination: ProfilePage(authViewModel: authViewModel)) {
-                NavItem(label: "Profile", systemImage: "person.circle")
-            }
+            navItem(
+                for: .home,
+                destination: HomePage(authViewModel: authViewModel),
+                label: "Home",
+                systemImage: "house"
+            )
+            navItem(
+                for: .events,
+                destination: EventListPage(authViewModel: authViewModel),
+                label: "Events",
+                systemImage: "list.bullet"
+            )
+            navItem(
+                for: .create,
+                destination: createEventPage(authViewModel: authViewModel),
+                label: "Create",
+                systemImage: "plus.circle"
+            )
+            navItem(
+                for: .profile,
+                destination: ProfilePage(authViewModel: authViewModel),
+                label: "Profile",
+                systemImage: "person.circle"
+            )
         }
         .font(.caption)
         .padding(.horizontal, 16)
@@ -41,11 +54,28 @@ struct BottomNavBar: View {
         .padding(.bottom, 8)
         .shadow(radius: 4)
     }
+    
+    @ViewBuilder
+    private func navItem<Destination: View>(
+        for page: BottomNavDestination,
+        destination: Destination,
+        label: String,
+        systemImage: String
+    ) -> some View {
+        if currentPage == page {
+            NavItem(label: label, systemImage: systemImage, isSelected: true)
+        } else {
+            NavigationLink(destination: destination) {
+                NavItem(label: label, systemImage: systemImage, isSelected: false)
+            }
+        }
+    }
 }
 
 private struct NavItem: View {
     let label: String
     let systemImage: String
+    let isSelected: Bool
     
     var body: some View {
         // Formats a single navigation item with an icon and label.
@@ -54,12 +84,12 @@ private struct NavItem: View {
                 .imageScale(.medium)
             Text(label)
         }
-        .foregroundStyle(.primary)
+        .foregroundStyle(isSelected ? .green : .primary)
     }
 }
 
 #Preview {
     NavigationStack {
-        BottomNavBar(authViewModel: AuthViewModel())
+        BottomNavBar(authViewModel: AuthViewModel(), currentPage: .home)
     }
 }
