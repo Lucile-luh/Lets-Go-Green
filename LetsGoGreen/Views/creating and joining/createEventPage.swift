@@ -83,7 +83,7 @@ struct createEventPage: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            BottomNavBar(authViewModel: authViewModel)
+            BottomNavBar(authViewModel: authViewModel, currentPage: .create)
         }
     }
     
